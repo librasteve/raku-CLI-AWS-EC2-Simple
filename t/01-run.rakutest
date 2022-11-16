@@ -1,0 +1,9 @@
+use v6.d;
+use Test;
+use WP;
+
+plan 1;
+
+ok ::('&main'), 'did &main get exported?';
+
+#done-testing;
