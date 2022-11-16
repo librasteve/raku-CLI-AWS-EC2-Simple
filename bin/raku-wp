@@ -1,7 +1,0 @@
-#!/usr/bin/env raku
-use v6.d;
-use WP;
-
-sub main() { }
-
-# vim: expandtab shiftwidth=4
