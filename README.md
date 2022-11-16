@@ -2,7 +2,11 @@
 
 # Wordpress Deploy & Control
 
-
+- client script 'raku-wp --launch'
+- read client yml config file
+- read .env credentials
+- launch AWS EC2 instance
+- install / use perl AWS CLI tools
 
 
 
