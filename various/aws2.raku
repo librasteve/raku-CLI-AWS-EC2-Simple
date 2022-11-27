@@ -16,7 +16,14 @@ class KeyPair {
     has $.name = "MyKeyPair$et";
     has $.file = 'MyKeyPair.pem';
 
+    method list-key-pairs {
+        qqx`aws ec2 describe-key-pairs` andthen
+        say .&from-json 
+        #iamerejh
+    }
+
     submethod TWEAK {
+        self.list-key-pairs;
         qqx`aws ec2 create-key-pair --key-name $!name --query 'KeyMaterial' --output text > $!file`;
         qqx`chmod 400 $!file`;
 
