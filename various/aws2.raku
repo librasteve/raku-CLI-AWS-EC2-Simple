@@ -14,19 +14,24 @@ class VPC {
 
 class KeyPair {
     has $.name = "MyKeyPair$et";
-    has $.file = 'MyKeyPair.pem';
+    has $.file = 'MyKeyPair$et.pem';
 
-    method list-key-pairs {
+    method names-from-aws {
         qqx`aws ec2 describe-key-pairs` andthen
-        say .&from-json 
-        #iamerejh
+        .&from-json<KeyPairs>.map: *<KeyName>
     }
 
+    method names-from-dir {
+        dir.grep(/pem/).map({S/.pem//})
+    }
+
+    #| is there a matching key-pair in this dir?
+    #| otherwise, make a new one
     submethod TWEAK {
-        self.list-key-pairs;
+        say self.names-from-aws;
+        say self.names-from-dir;
         qqx`aws ec2 create-key-pair --key-name $!name --query 'KeyMaterial' --output text > $!file`;
         qqx`chmod 400 $!file`;
-
     }
 }
 
