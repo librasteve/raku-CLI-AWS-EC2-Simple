@@ -2,11 +2,15 @@
 
 # Simple AWS Session & Launch Control
 
-## Getting Started 
+## Getting Started [FIXME]
 
 - apt-get update && apt-get install aws-cli
 - aws configure _[enter your config here]_
 - docker run -v /root/.aws:/root/.aws -it p6steve/rakudo:basic
+- cd ~ && git clone https://github.com/p6steve/raku-WP.git
+- cd raku-WP/various
+- raku aws2.raku
+- ssh -i "MyKeyPair.pem" ubuntu@ec2-13-41-185-87.eu-west-2.compute.amazonaws.com  <= use the public dns 
 
 # Wordpress Deploy & Control
 
