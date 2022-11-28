@@ -13,8 +13,8 @@ class VPC {
 }
 
 class KeyPair {
-    has $.name = "MyKeyPair$et";
-    has $.file = 'MyKeyPair$et.pem';
+    has $.dir  = '.';
+    has $.name;
 
     method names-from-aws {
         qqx`aws ec2 describe-key-pairs` andthen
@@ -22,16 +22,25 @@ class KeyPair {
     }
 
     method names-from-dir {
-        dir.grep(/pem/).map({S/.pem//})
+        dir($!dir).grep(/pem/).map({S/.pem//})
     }
 
-    #| is there a matching key-pair in this dir?
-    #| otherwise, make a new one
+    method create-key-pair {
+        qqx`aws ec2 create-key-pair --key-name $!name --query 'KeyMaterial' --output text > $!name.pem`;
+        qqx`chmod 400 $!name.pem`
+    }
+
     submethod TWEAK {
-        say self.names-from-aws;
-        say self.names-from-dir;
-        qqx`aws ec2 create-key-pair --key-name $!name --query 'KeyMaterial' --output text > $!file`;
-        qqx`chmod 400 $!file`;
+        for self.names-from-dir {
+            if $_ ∈ self.names-from-aws.Set {   # is there a matching .pem in this dir?
+                $!name = $_
+            }
+        }
+
+        if ! $!name {                           # otherwise, make a new one
+            $!name = "MyKeyPair$et";
+            self.create-key-pair
+        }
     }
 }
 
@@ -59,10 +68,6 @@ my $vpc = VPC.new andthen say .id;
 my $key-pair = KeyPair.new andthen say .name;
 die;
 
-#make key pair
-my $key-name = "MyKeyPair$et";
-qqx`aws ec2 create-key-pair --key-name $key-name --query 'KeyMaterial' --output text > MyKeyPair.pem`;
-qqx`chmod 400 MyKeyPair.pem`;
 #`[
 #create-security-group
 qqx`aws ec2 create-security-group --group-name my-sg$et --description "My security group" --vpc-id $vpc-id` andthen
