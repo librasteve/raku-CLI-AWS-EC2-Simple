@@ -50,8 +50,8 @@ class VPC {
 class SecurityGroup {
     has $.name = 'MySG';
     has $.id;
-    has $.vpc;
-    has $.session;
+    has $.vpc-id;
+    has $.cidr;
 
     method ids-from-aws {
         qqx`aws ec2 describe-security-groups`
@@ -62,12 +62,12 @@ class SecurityGroup {
     }
 
     method create-security-group {
-        qqx`aws ec2 create-security-group --group-name $!name --description $!name --vpc-id {$!vpc.id}`
+        qqx`aws ec2 create-security-group --group-name $!name --description $!name --vpc-id {$!vpc-id}`
         andthen
             $!id = .&from-json<GroupId>;
 
         # set rules (remember to delete MySG if these change)
-        qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 22 --cidr {$!session.client-cidr}`;
+        qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 22 --cidr $!cidr`;
     }
 
     method TWEAK {
@@ -81,45 +81,51 @@ class SecurityGroup {
     }
 }
 
+class Session {
+    has $.key-pair = KeyPair.new;
+    has $.vpc-id = VPC.new.id;
+    has $.sg;
+
+    method ip {
+        qqx`curl -s https://checkip.amazonaws.com`
+        andthen .chomp
+    }
+
+    method cidr {
+        "$.ip/0"
+    }
+
+    method TWEAK {
+        $!sg = SecurityGroup.new(:$!vpc-id, :$.cidr);
+    }
+}
+
 class Instance {
+    has $.s = Session.new;
     has $.instance-id;
     has $.image-id = 'ami-0f540e9f488cfa27d';   # x86 for now
     has $.instance-type = 't2.micro';
     has $.public-dns-name;
     has $.public-ip-address;
-}
-
-class Session {
-    #has $.vpc;
-    #has $.key-pair;
-    #has $.sg;
-    has $.client-ip;
-
-    method client-cidr {
-        "$!client-ip/0"
-    }
 
     method TWEAK {
-        qqx`curl -s https://checkip.amazonaws.com`
+        qqx`aws ec2 run-instances --image-id {$!image-id} --count 1 
+        --instance-type {$!instance-type} --key-name {$!s.key-pair.name} --security-group-ids {$!s.sg.id}` 
         andthen
-            $!client-ip = .chomp
+            say my $instance-id = .&from-json<Instances>[0]<InstanceId>;
+        
     }
 }
 
+##dd my $session = Session.new;
+dd my $instance = Instance.new;
+die;
+
+#`[
 my $key-pair = KeyPair.new andthen say .name;
 my $vpc = VPC.new andthen say .id;
 my $session = Session.new andthen say .client-cidr;
 my $sg = SecurityGroup.new(:$vpc, :$session) andthen say .id;
-die;
-
-#`[
-#create-security-group
-qqx`aws ec2 create-security-group --group-name my-sg$et --description "My security group" --vpc-id $vpc-id` andthen
-say my $sg-id = .&from-json<GroupId>;
-
-qqx`aws ec2 authorize-security-group-ingress --group-id $sg-id --protocol tcp --port 22 --cidr $client-cidr`;
-qqx`aws ec2 describe-security-groups --group-ids $sg-id` andthen
-say .&from-json;
 
 #create-instance
 my $image-id = 'ami-0f540e9f488cfa27d';
