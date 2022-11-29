@@ -6,14 +6,14 @@ my $et = time;    #for unique names
 class VPC {
     has $.id;
 
-    submethod TWEAK {
+    method TWEAK {
         qqx`aws ec2 describe-vpcs --filters Name=is-default,Values=true` andthen
         $!id := .&from-json<Vpcs>[0]<VpcId> 
     }
 }
 
 class KeyPair {
-    has $.dir  = '.';
+    has $.dir = '.';
     has $.name;
 
     method names-from-aws {
@@ -30,15 +30,16 @@ class KeyPair {
         qqx`chmod 400 $!name.pem`
     }
 
-    submethod TWEAK {
-        for self.names-from-dir {
-            if $_ ∈ self.names-from-aws.Set {   # is there a matching .pem in this dir?
-                $!name = $_
+    method TWEAK {
+        for self.names-from-dir -> $dn {
+            if $dn ∈ self.names-from-aws.Set {   # is there a matching .pem file in dir 
+                $!name := $dn;
+                last
             }
         }
 
         if ! $!name {                           # otherwise, make a new one
-            $!name = "MyKeyPair$et";
+            $!name := "MyKeyPair$et";
             self.create-key-pair
         }
     }
