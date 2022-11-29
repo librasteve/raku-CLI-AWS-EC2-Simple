@@ -82,7 +82,7 @@ class SecurityGroup {
 }
 
 class Session {
-    has $.key-pair = KeyPair.new;
+    has $.kpn = KeyPair.new.name;
     has $.vpc-id = VPC.new.id;
     has $.sg;
 
@@ -96,49 +96,40 @@ class Session {
     }
 
     method TWEAK {
-        $!sg = SecurityGroup.new(:$!vpc-id, :$.cidr);
+        $!sg = SecurityGroup.new(:$!vpc-id, :$.cidr)
     }
 }
 
 class Instance {
+    has $.id;
     has $.s = Session.new;
-    has $.instance-id;
-    has $.image-id = 'ami-0f540e9f488cfa27d';   # x86 for now
-    has $.instance-type = 't2.micro';
-    has $.public-dns-name;
-    has $.public-ip-address;
+    has $.image = 'ami-0f540e9f488cfa27d';  # x86 for now
+    has $.type  = 't2.micro';               # free tier
 
     method TWEAK {
-        qqx`aws ec2 run-instances --image-id {$!image-id} --count 1 
-        --instance-type {$!instance-type} --key-name {$!s.key-pair.name} --security-group-ids {$!s.sg.id}` 
+        qqx`aws ec2 run-instances --image-id $!image --instance-type $!type --key-name {$!s.kpn} --security-group-ids {$!s.sg.id}` 
         andthen
-            say my $instance-id = .&from-json<Instances>[0]<InstanceId>;
-        
+            $!id = .&from-json<Instances>[0]<InstanceId>;
+    }
+
+    method describe {
+        qqx`aws ec2 describe-instances --instance-ids $!id`
+        andthen 
+            .&from-json
+    }
+
+    method public-dns-name {
+        self.describe<Reservations>[0]<Instances>[0]<PublicDnsName>
+    }
+
+    method public-ip-address {
+        self.describe<Reservations>[0]<Instances>[0]<PublicIPAddress>
+    }
+
+    method connect {
+        my $dns = self.public-dns-name;
+        qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
     }
 }
 
-##dd my $session = Session.new;
-dd my $instance = Instance.new;
-die;
-
-#`[
-my $key-pair = KeyPair.new andthen say .name;
-my $vpc = VPC.new andthen say .id;
-my $session = Session.new andthen say .client-cidr;
-my $sg = SecurityGroup.new(:$vpc, :$session) andthen say .id;
-
-#create-instance
-my $image-id = 'ami-0f540e9f488cfa27d';
-my $instance-type = 't2.micro';
-qqx`aws ec2 run-instances --image-id $image-id --count 1 --instance-type $instance-type --key-name $key-name --security-group-ids $sg-id` andthen
-say my $instance-id = .&from-json<Instances>[0]<InstanceId>;
-
-qqx`aws ec2 describe-instances --instance-ids $instance-id` andthen
-say my $describe-instances = .&from-json;
-
-say my $public-dns-name   = $describe-instances<Reservations>[0]<Instances>[0]<PublicDnsName>;
-say my $public-ip-address = $describe-instances<Reservations>[0]<Instances>[0]<PublicIpAddress>;
-
-sleep(5);
-say qq`ssh -o "StrictHostKeyChecking no" -i "MyKeyPair.pem" ubuntu@$public-dns-name`; 
-#]
+Instance.new.connect.say;
