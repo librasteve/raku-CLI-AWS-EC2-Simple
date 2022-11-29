@@ -3,16 +3,6 @@ use JSON::Fast;
 
 my $et = time;    # for unique names
 
-class VPC {
-    has $.id;
-
-    method TWEAK {
-        qqx`aws ec2 describe-vpcs --filters Name=is-default,Values=true`
-        andthen
-            $!id := .&from-json<Vpcs>[0]<VpcId> 
-    }
-}
-
 class KeyPair {
     has $.dir = '.';
     has $.name;
@@ -47,10 +37,20 @@ class KeyPair {
     }
 }
 
+class VPC {
+    has $.id;
+
+    method TWEAK {
+        qqx`aws ec2 describe-vpcs --filters Name=is-default,Values=true`
+        andthen
+            $!id := .&from-json<Vpcs>[0]<VpcId> 
+    }
+}
+
 class SecurityGroup {
     has $.name = 'MySG';
     has $.id;
-    has $.vpc-id;
+    has $.vpc;
     has $.session;
 
     method ids-from-aws {
@@ -62,7 +62,7 @@ class SecurityGroup {
     }
 
     method create-security-group {
-        qqx`aws ec2 create-security-group --group-name $!name --description "MySG" --vpc-id $!vpc-id`
+        qqx`aws ec2 create-security-group --group-name $!name --description $!name --vpc-id {$!vpc.id}`
         andthen
             $!id = .&from-json<GroupId>;
 
@@ -72,7 +72,12 @@ class SecurityGroup {
 
     method TWEAK {
         my %h = self.ids-from-aws;
-        $!id = %h{$!name} // self.create-security-group
+
+        if %h{$!name} {
+            $!id = $^i
+        } else {
+            self.create-security-group
+        }
     }
 }
 
@@ -101,11 +106,10 @@ class Session {
     }
 }
 
-my $vpc = VPC.new andthen say .id;
 my $key-pair = KeyPair.new andthen say .name;
-my $session = Session.new andthen dd .client-cidr;
-my $sg = SecurityGroup.new(vpc-id => $vpc.id, session => $session);
-say $sg.id;
+my $vpc = VPC.new andthen say .id;
+my $session = Session.new andthen say .client-cidr;
+my $sg = SecurityGroup.new(:$vpc, :$session) andthen say .id;
 die;
 
 #`[
