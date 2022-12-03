@@ -1,4 +1,5 @@
 use JSON::Fast;
+use YAMLish;
 # uses $HOME/.aws/credentials
 
 my $et = time;    # for unique names
@@ -38,22 +39,16 @@ services:
       - wordpress:/var/www/html
     networks:
       - app-network
-
-  webserver:
-    depends_on:
-      - wordpress
-    image: nginx:1.15.12-alpine
-    container_name: webserver
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - wordpress:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
-    networks:
-      - app-network
 END
+
+#my @h = load-yaml('config/filename.yaml'.IO.slurp);
+dd my %y = $yaml.&load-yaml;
+say %y<services><db><image>;
+dd %y<services><db><environment>.split('=').Hash;
+%y<services><db><image> = 'xxx';
+say my $z = save-yaml( %y ).trans('"' => '');
+
+die;
 
 class KeyPair {
     has $.dir = '.';
