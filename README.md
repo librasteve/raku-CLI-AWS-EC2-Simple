@@ -14,6 +14,8 @@
 
 # Wordpress Deploy & Control
 
+viz. [digital ocean howto](https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose#step-3-defining-services-with-docker-compose)
+
 - client script 'raku-wp --launch'
 - read client yml config file
 - read .env credentials
