@@ -20,7 +20,17 @@
 - launch AWS EC2 instance
 - install / use perl AWS CLI tools
 
+# TODOs
 
+- [ ] new (launch based on yaml)
+- [ ] nuke (terminate all instances)
+- [ ] status (warn if > one running instance)
+- [ ] stop     ( " )
+- [ ] start    ( " )
+- [ ] reboot   ( " )
+- [ ] terminate( " )
+- [ ] yaml (ie. return yaml with id, etc.)
+- [ ] freeze / thaw
 
 ### Copyright
 copyright(c) 2022 Henley Cloud Consulting Ltd.
