@@ -2,22 +2,6 @@ use YAMLish;
 use JSON::Fast;
 # uses $HOME/.aws/credentials
 
-## design
-# xxx.yaml
-#
-# session start
-#   new (launch based on yaml)
-#   nuke (terminate all instances)
-#   status (warn if > one running instance)
-#   stop     ( " )
-#   start    ( " )
-#   reboot   ( " )
-#   terminate( " )
-#   yaml
-#   freeze / thaw
-
-#viz. https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose#step-3-defining-services-with-docker-compose
-
 my $et = time;    # for unique names
 
 class Session {
