@@ -49,8 +49,38 @@ class Session {
         }
     }
 
+    class Address {
+        has $.ip;
+        has $.eipalloc;
+
+        method allocate {
+            qqx`aws ec2 allocate-address`
+            andthen
+                my $r = .&from-json; 
+
+            $!ip := $r<PublicIp>;
+            $!eipalloc := $r<AllocationId>;
+        }
+
+        method associate( :$id ) {
+            qqx`aws ec2 associate-address --instance-id $id --allocation-id $!eipalloc`
+        }
+
+        method TWEAK {
+            qqx`aws ec2 describe-addresses`
+            andthen
+                my $a := .&from-json<Addresses>[0]; 
+
+            if $!ip := $a<PublicIp> {
+                $!eipalloc := $a<AllocationId>;
+            } else {
+                self.allocate;
+            }
+        }
+    }
+    
     class SecurityGroup {
-        has $.name = 'MySG';
+        has $.name = 'MySG3';
         has $.id;
         has $.vpc-id;
         has $.cidr;
@@ -70,6 +100,8 @@ class Session {
 
             # set rules (remember to delete MySG if these change)
             qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 22 --cidr $!cidr`;
+            qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 443 --cidr 0.0.0.0/0`;
+            qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 80 --cidr 0.0.0.0/0`;
         }
 
         method TWEAK {
@@ -85,15 +117,16 @@ class Session {
 
     has $.kpn = KeyPair.new.name;
     has $.vpc-id = VPC.new.id;
+    has $.eip = Address.new;
     has $.sg;
 
-    method ip {
+    method client-ip {
         qqx`curl -s https://checkip.amazonaws.com`
         andthen .chomp
     }
 
     method cidr {
-        "$.ip/0"
+        "$.client-ip/0"
     }
 
     method TWEAK {
@@ -127,6 +160,9 @@ class Instance {
             
         qqx`$cmd` andthen
             $!id = .&from-json<Instances>[0]<InstanceId>;
+
+        sleep 40;                       # sleep until running
+        $!s.eip.associate( :$!id );     # always associate Elastic IP
     }
 
     method describe {
@@ -140,7 +176,7 @@ class Instance {
     }
 
     method public-ip-address {
-        self.describe<Reservations>[0]<Instances>[0]<PublicIPAddress>
+        self.describe<Reservations>[0]<Instances>[0]<PublicIpAddress>
     }
 
     method connect {
@@ -149,4 +185,7 @@ class Instance {
     }
 }
 
-Instance.new.connect.say;
+my $i = Instance.new;
+$i.connect.say;
+$i.public-ip-address.say;
+
