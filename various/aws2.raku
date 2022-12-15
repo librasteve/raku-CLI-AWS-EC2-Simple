@@ -1,8 +1,19 @@
 use YAMLish;
 use JSON::Fast;
-# uses $HOME/.aws/credentials
+# first go `aws configure` to populate $HOME/.aws/credentials
 
 my $et = time;    # for unique names
+
+class Config {
+    has $.image;
+    has $.type;
+
+    method TWEAK {
+        my %y := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);
+        $!image := %y<instance><image>;
+        $!type  := %y<instance><type>;
+    }
+}
 
 class Session {
     class KeyPair {
@@ -132,16 +143,11 @@ class Session {
     method TWEAK {
         $!sg = SecurityGroup.new(:$!vpc-id, :$.cidr)
     }
-}
 
-class Config {
-    has $.image;
-    has $.type;
-
-    method TWEAK {
-        my %y := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);
-        $!image := %y<instance><image>;
-        $!type  := %y<instance><type>;
+    method instance-ids {
+        qqx`aws ec2 describe-instances`# --instance-ids`
+        andthen 
+            .&from-json<Reservations>[0]<Instances>.map(*<InstanceId>);
     }
 }
 
@@ -151,6 +157,8 @@ class Instance {
     has $.s = Session.new;
 
     method TWEAK {
+        say 'launching...';
+
         my $cmd :=
             "aws ec2 run-instances " ~
             "--image-id {$!c.image} " ~
@@ -160,32 +168,60 @@ class Instance {
             
         qqx`$cmd` andthen
             $!id = .&from-json<Instances>[0]<InstanceId>;
-
-        sleep 40;                       # sleep until running
-        $!s.eip.associate( :$!id );     # always associate Elastic IP
     }
 
     method describe {
         qqx`aws ec2 describe-instances --instance-ids $!id`
         andthen 
-            .&from-json
+            .&from-json<Reservations>[0]<Instances>[0]
+    }
+
+    method state {
+        self.describe<State><Name>
     }
 
     method public-dns-name {
-        self.describe<Reservations>[0]<Instances>[0]<PublicDnsName>
+        self.describe<PublicDnsName>
     }
 
     method public-ip-address {
-        self.describe<Reservations>[0]<Instances>[0]<PublicIpAddress>
+        self.describe<PublicIpAddress>
     }
 
     method connect {
         my $dns = self.public-dns-name;
         qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
     }
+
+    method wait-running {
+        until self.state eq 'running' { 
+            say self.state, '...'; 
+            sleep 5 
+        }
+        say self.state, '...';
+    }
+
+    method eip-associate {
+        self.wait-running;
+        $!s.eip.associate( :$!id );     # always associate Elastic IP
+    }
+
+    method terminate {
+        say 'terminating...';
+        qqx`aws ec2 terminate-instances --instance-ids $!id`
+    }
 }
 
+## for cmds list & nuke
+#my $s = Session.new;
+#$s.instance-ids;
+
 my $i = Instance.new;
+$i.eip-associate;
+
 $i.connect.say;
 $i.public-ip-address.say;
+
+$i.terminate;
+say $i.state;
 
