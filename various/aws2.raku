@@ -2,18 +2,24 @@ use YAMLish;
 use JSON::Fast;
 # first go `aws configure` to populate $HOME/.aws/credentials
 
-my $et = time;    # for unique names
+my $et = time;      # for unique names
+
+my %config-yaml := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);
+                    # only read file once
 
 class Config {
+    has %.y; 
     has $.image;
     has $.type;
-    has $.sg-name;
+    has $.sg-name = 'MySG';
+    has @.sg-rules;
 
     method TWEAK {
-        my %y := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);
-        $!image   := %y<instance><image>;
-        $!type    := %y<instance><type>;
-        $!sg-name := %y<instance><sg-name>;
+        %!y        := %config-yaml; 
+        $!image    := %!y<instance><image>;
+        $!type     := %!y<instance><type>;
+        $!sg-name  := %!y<instance><security-group><name>;
+        @!sg-rules := %!y<instance><security-group><rules>;
     }
 }
 
@@ -61,7 +67,7 @@ class VPC {
     }
 }
 
-class Address {
+class ElasticIP {
     has $.ip;
     has $.eipalloc;
 
@@ -92,8 +98,8 @@ class Address {
 }
 
 class SecurityGroup {
-    has $.name = 'MySG';
     has $.id;
+    has $.c;
     has $.vpc-id;
 
     method ids {
@@ -114,7 +120,7 @@ class SecurityGroup {
     }
 
     method create-security-group {
-        qqx`aws ec2 create-security-group --group-name $!name --description $!name --vpc-id {$!vpc-id}`
+        qqx`aws ec2 create-security-group --group-name {$!c.sg-name} --description {$!c.sg-name} --vpc-id {$!vpc-id}`
         andthen
             $!id = .&from-json<GroupId>;
 
@@ -127,7 +133,7 @@ class SecurityGroup {
     method TWEAK {
         my %h = self.ids;
 
-        if %h{$!name} {
+        if %h{$!c.sg-name} {
             $!id = $^i
         } else {
             self.create-security-group
@@ -139,11 +145,11 @@ class Session {
     has $.c = Config.new;
     has $.kpn = KeyPair.new.name;
     has $.vpc-id = VPC.new.id;
-    has $.eip = Address.new;
+    has $.eip = ElasticIP.new;
     has $.sg;
 
     method TWEAK {
-        $!sg = SecurityGroup.new(:$!vpc-id, name => $!c.sg-name)
+        $!sg = SecurityGroup.new(:$!vpc-id, :$!c)
     }
 
     method instance-ids {
@@ -217,7 +223,6 @@ class Instance {
 ## for cmds list & nuke
 my $s = Session.new;
 say $s.instance-ids;
-die;
 
 my $i = Instance.new;
 $i.eip-associate;
@@ -225,6 +230,6 @@ $i.public-ip-address.say;
 
 $i.connect.say;
 
-#$i.terminate;
+$i.terminate;
 say $i.state;
 
