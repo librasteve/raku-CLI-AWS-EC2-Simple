@@ -5,7 +5,7 @@
 
 # Simple AWS Session & Launch Control
 
-## Getting Started [FIXME]
+## Getting Started
 
 - apt-get update && apt-get install aws-cli
 - aws configure _[enter your config here]_
