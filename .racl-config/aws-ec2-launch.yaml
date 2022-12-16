@@ -2,7 +2,7 @@ instance:
     image: 'ami-0f540e9f488cfa27d'
     type: 't2.micro'
     security-group:
-        name: 'MySG'
+        name: 'MySG2'
         rules:
             - inbound:
                 port: 80

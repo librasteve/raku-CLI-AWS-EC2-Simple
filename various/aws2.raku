@@ -2,18 +2,9 @@ use YAMLish;
 use JSON::Fast;
 # first go `aws configure` to populate $HOME/.aws/credentials
 
-#`[
-rules about rules
-- will always open port 22 (SSH) inbound from this client IP
-- will re-use the existing named Security Group (or create if not present)
-- only inbound are supported for now
-- if you want to keep the name and change the rules, then delete via the aws console
-#]
-
 my $et = time;      # for unique names
 
-my %config-yaml := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);
-                    # only read file once
+my %config-yaml := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);   # only once
 
 class Config {
     has %.y; 
@@ -110,7 +101,7 @@ class SecurityGroup {
     has Config $.c;
     has $.vpc-id;
 
-    method ids {
+    method names2ids {
         qqx`aws ec2 describe-security-groups`
         andthen
             .&from-json<SecurityGroups>
@@ -127,11 +118,7 @@ class SecurityGroup {
         "$.client-ip/32"
     }
 
-    method create-security-group {
-        qqx`aws ec2 create-security-group --group-name {$!c.sg-name} --description {$!c.sg-name} --vpc-id {$!vpc-id}`
-        andthen
-            $!id = .&from-json<GroupId>;
-
+    method apply-rules {
         # set rules (remember to delete MySG if these change)
         # will always open port 22 (SSH) inbound from this client IP
         qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 22  --cidr $.cidr`;
@@ -146,13 +133,23 @@ class SecurityGroup {
         # outbound not implemented
     }
 
+    method create {
+        say 'creating sg...';
+
+        qqx`aws ec2 create-security-group --group-name {$!c.sg-name} --description {$!c.sg-name} --vpc-id {$!vpc-id}`
+        andthen
+            $!id = .&from-json<GroupId>;
+
+        self.apply-rules
+    }
+
     method TWEAK {
-        my %h = self.ids;
+        my %h = self.names2ids;
 
         if %h{$!c.sg-name} {
             $!id = $^i
         } else {
-            self.create-security-group
+            self.create
         }
     }
 }
@@ -222,6 +219,7 @@ class Instance {
 
     method eip-associate {
         self.wait-until-running;
+        say 'associating eip...'; 
         $!s.eip.associate( :$!id );     # always associate Elastic IP
     }
 
