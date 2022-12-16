@@ -7,15 +7,20 @@ my $et = time;    # for unique names
 class Config {
     has $.image;
     has $.type;
+    has $.sg-name;
 
     method TWEAK {
         my %y := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);
-        $!image := %y<instance><image>;
-        $!type  := %y<instance><type>;
+        $!image   := %y<instance><image>;
+        $!type    := %y<instance><type>;
+        $!sg-name := %y<instance><sg-name>;
     }
 }
 
 class Session {
+
+    ### SESSION RELATED CLASSES ###
+
     class KeyPair {
         has $.dir = '.';
         has $.name;
@@ -113,7 +118,6 @@ class Session {
         }
 
         method create-security-group {
-            ##die $.cidr;
             qqx`aws ec2 create-security-group --group-name $!name --description $!name --vpc-id {$!vpc-id}`
             andthen
                 $!id = .&from-json<GroupId>;
@@ -135,13 +139,16 @@ class Session {
         }
     }
 
+    ### SESSION CLASS ###
+
+    has $.c = Config.new;
     has $.kpn = KeyPair.new.name;
     has $.vpc-id = VPC.new.id;
     has $.eip = Address.new;
     has $.sg;
 
     method TWEAK {
-        $!sg = SecurityGroup.new(:$!vpc-id)
+        $!sg = SecurityGroup.new(:$!vpc-id, name => $!c.sg-name)
     }
 
     method instance-ids {
@@ -213,14 +220,15 @@ class Instance {
 }
 
 ## for cmds list & nuke
-#my $s = Session.new;
-#$s.instance-ids;
+my $s = Session.new;
+say $s.instance-ids;
+die;
 
 my $i = Instance.new;
 $i.eip-associate;
+$i.public-ip-address.say;
 
 $i.connect.say;
-$i.public-ip-address.say;
 
 #$i.terminate;
 say $i.state;
