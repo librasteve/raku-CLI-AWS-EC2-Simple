@@ -91,12 +91,11 @@ class Session {
     }
     
     class SecurityGroup {
-        has $.name = 'MySG3';
+        has $.name = 'MySG';
         has $.id;
         has $.vpc-id;
-        has $.cidr;
 
-        method ids-from-aws {
+        method ids {
             qqx`aws ec2 describe-security-groups`
             andthen
                 .&from-json<SecurityGroups>
@@ -104,19 +103,29 @@ class Session {
                 .map({$_<GroupName> => $_<GroupId>})
         }
 
+        method client-ip {
+            qqx`curl -s https://checkip.amazonaws.com`
+            andthen .chomp
+        }
+
+        method cidr {
+            "$.client-ip/32"
+        }
+
         method create-security-group {
+            ##die $.cidr;
             qqx`aws ec2 create-security-group --group-name $!name --description $!name --vpc-id {$!vpc-id}`
             andthen
                 $!id = .&from-json<GroupId>;
 
             # set rules (remember to delete MySG if these change)
-            qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 22 --cidr $!cidr`;
+            qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 22  --cidr $.cidr`;
+            qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 80  --cidr 0.0.0.0/0`;
             qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 443 --cidr 0.0.0.0/0`;
-            qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 80 --cidr 0.0.0.0/0`;
         }
 
         method TWEAK {
-            my %h = self.ids-from-aws;
+            my %h = self.ids;
 
             if %h{$!name} {
                 $!id = $^i
@@ -131,21 +140,12 @@ class Session {
     has $.eip = Address.new;
     has $.sg;
 
-    method client-ip {
-        qqx`curl -s https://checkip.amazonaws.com`
-        andthen .chomp
-    }
-
-    method cidr {
-        "$.client-ip/0"
-    }
-
     method TWEAK {
-        $!sg = SecurityGroup.new(:$!vpc-id, :$.cidr)
+        $!sg = SecurityGroup.new(:$!vpc-id)
     }
 
     method instance-ids {
-        qqx`aws ec2 describe-instances`# --instance-ids`
+        qqx`aws ec2 describe-instances`
         andthen 
             .&from-json<Reservations>[0]<Instances>.map(*<InstanceId>);
     }
@@ -176,10 +176,6 @@ class Instance {
             .&from-json<Reservations>[0]<Instances>[0]
     }
 
-    method state {
-        self.describe<State><Name>
-    }
-
     method public-dns-name {
         self.describe<PublicDnsName>
     }
@@ -188,12 +184,11 @@ class Instance {
         self.describe<PublicIpAddress>
     }
 
-    method connect {
-        my $dns = self.public-dns-name;
-        qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
+    method state {
+        self.describe<State><Name>
     }
 
-    method wait-running {
+    method wait-until-running {
         until self.state eq 'running' { 
             say self.state, '...'; 
             sleep 5 
@@ -202,8 +197,13 @@ class Instance {
     }
 
     method eip-associate {
-        self.wait-running;
+        self.wait-until-running;
         $!s.eip.associate( :$!id );     # always associate Elastic IP
+    }
+
+    method connect {
+        my $dns = self.public-dns-name;
+        qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
     }
 
     method terminate {
@@ -222,6 +222,6 @@ $i.eip-associate;
 $i.connect.say;
 $i.public-ip-address.say;
 
-$i.terminate;
+#$i.terminate;
 say $i.state;
 
