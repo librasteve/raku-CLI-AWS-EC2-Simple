@@ -41,6 +41,11 @@ viz. [digital ocean howto](https://www.digitalocean.com/community/tutorials/how-
 # NOTES
 
 - unassigned Elastic IPs are chargeable ($5 per month ish), may be better to run one free tier instance
+- rules about rules
+  - will always open port 22 (SSH) inbound from this client IP
+  - will re-use the existing named Security Group (or create if not present)
+  - only inbound are supported for now 
+  -  if you want to keep the name and change the rules, then delete via the aws console
 
 ### Copyright
 copyright(c) 2022 Henley Cloud Consulting Ltd.
