@@ -2,6 +2,14 @@ use YAMLish;
 use JSON::Fast;
 # first go `aws configure` to populate $HOME/.aws/credentials
 
+#`[
+rules about rules
+- will always open port 22 (SSH) inbound from this client IP
+- will re-use the existing named Security Group (or create if not present)
+- only inbound are supported for now
+- if you want to keep the name and change the rules, then delete via the aws console
+#]
+
 my $et = time;      # for unique names
 
 my %config-yaml := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);
@@ -99,7 +107,7 @@ class ElasticIP {
 
 class SecurityGroup {
     has $.id;
-    has $.c;
+    has Config $.c;
     has $.vpc-id;
 
     method ids {
@@ -125,9 +133,17 @@ class SecurityGroup {
             $!id = .&from-json<GroupId>;
 
         # set rules (remember to delete MySG if these change)
+        # will always open port 22 (SSH) inbound from this client IP
         qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 22  --cidr $.cidr`;
-        qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 80  --cidr 0.0.0.0/0`;
-        qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp --port 443 --cidr 0.0.0.0/0`;
+
+        for $!c.sg-rules.map(*<inbound>) -> $ib {
+            my $port = "--port {$ib<port>}";
+            my $cidr = "--cidr {$ib<cidr>}";
+
+            qqx`aws ec2 authorize-security-group-ingress --group-id $!id --protocol tcp $port $cidr`;
+        }
+
+        # outbound not implemented
     }
 
     method TWEAK {
@@ -230,6 +246,6 @@ $i.public-ip-address.say;
 
 $i.connect.say;
 
-$i.terminate;
+#$i.terminate;
 say $i.state;
 

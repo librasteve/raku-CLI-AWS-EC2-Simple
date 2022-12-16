@@ -2,12 +2,12 @@ instance:
     image: 'ami-0f540e9f488cfa27d'
     type: 't2.micro'
     security-group:
-        name: 'MySG3'
+        name: 'MySG'
         rules:
-            - rule:
+            - inbound:
                 port: 80
                 cidr: '0.0.0.0/0'
-            - rule:
+            - inbound:
                 port: 443 
                 cidr: '0.0.0.0/0'
 
