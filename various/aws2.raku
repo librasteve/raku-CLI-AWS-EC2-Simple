@@ -232,6 +232,24 @@ class Instance {
         say 'terminating...';
         qqx`aws ec2 terminate-instances --instance-ids $!id`
     }
+
+    method login {
+    #iamerejh .pem.pem
+        my $proc = Proc::Async.new(:w, 'ssh', '-tt', '-o', "StrictHostKeyChecking no", 
+            '-i', "{$!s.kpn}.pem", "ubuntu@$.public-dns-name");
+        $proc.stdout.tap({ print "stdout: $^s" });
+        $proc.stderr.tap({ print "stderr: $^s" });
+
+        say "connecting...";
+        my $promise = $proc.start;
+
+        $proc.say("echo 'yo'");
+        $proc.say("id");
+
+        $proc.say("exit");
+        await $promise;
+        say "done.";
+    }
 }
 
 ## for cmds list & nuke
@@ -243,7 +261,8 @@ $i.eip-associate;
 $i.public-ip-address.say;
 
 $i.connect.say;
+$i.login;
 
-#$i.terminate;
+$i.terminate;
 say $i.state;
 
