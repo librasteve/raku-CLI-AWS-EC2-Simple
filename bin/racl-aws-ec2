@@ -295,7 +295,7 @@ sub MAIN(
     given $cmd {
         when 'launch' {
             my $i = Instance.new;
-            spurt './.racl-temp', $i.id;            
+            spurt './.racl-temp', $i.id;     # remember last one       
 
             $i.eip-associate if $eip;
 
