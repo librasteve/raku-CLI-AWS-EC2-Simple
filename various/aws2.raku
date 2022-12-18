@@ -230,7 +230,7 @@ class Instance {
         $!s.eip.associate( :$!id );     # always associate Elastic IP
     }
 
-    method connect {
+    method connection-str {
         my $dns = self.public-dns-name;
         qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
     }
@@ -240,19 +240,19 @@ class Instance {
         qqx`aws ec2 terminate-instances --instance-ids $!id`
     }
 
-    method login {
-        my $dns = self.public-dns-name;
-        qqx`ssh-keygen -f "/root/.ssh/known_hosts" -R $dns`;
+    method connect {
+        say "connecting...";
+        sleep 10;       # let instance mellow
 
-#iamerejh
-        say "{$!s.kpn}.pem", "ubuntu@$.public-dns-name";
-        #my $proc = Proc::Async.new(:w, 'ssh', '-tt', '-o', "StrictHostKeyChecking no", '-i', "{$!s.kpn}.pem", "ubuntu@$.public-dns-name");
-        dd my @args = ('ssh', '-tt', '-o', "StrictHostKeyChecking no", '-i', "{$!s.kpn}.pem", "ubuntu" ~ '@' ~ "{self.public-dns-name}");
-        my $proc = Proc::Async.new(:w, |@args); 
+        my $dns = self.public-dns-name;
+
+        # since we are changing the host, but keeping the eip, we flush known_hosts
+        qqx`ssh-keygen -f "~/.ssh/known_hosts" -R $dns`;
+
+        my $proc = Proc::Async.new(:w, 'ssh', '-tt', '-o', "StrictHostKeyChecking no", '-i', "{$!s.kpn}.pem", "ubuntu@$dns");
         $proc.stdout.tap({ print "stdout: $^s" });
         $proc.stderr.tap({ print "stderr: $^s" });
 
-        say "connecting...";
         my $promise = $proc.start;
 
         $proc.say("echo 'yo'");
@@ -270,12 +270,12 @@ say $s.instance-ids;
 say $s.instance-kps;
 
 my $i = Instance.new;
+
 $i.eip-associate;
 $i.public-ip-address.say;
 
-$i.connect.say;
-$i.wait-until-running;
-$i.login;
+$i.connection-str.say;
+$i.connect;
 
 #$i.terminate;
 say $i.state;
