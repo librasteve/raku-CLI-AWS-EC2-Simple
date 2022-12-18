@@ -37,6 +37,7 @@ class KeyPair {
     }
 
     method create-key-pair {
+        say 'creating kp...';
         qqx`aws ec2 create-key-pair --key-name $!name --query 'KeyMaterial' --output text > $!name.pem`;
         qqx`chmod 400 $!name.pem`
     }
@@ -166,9 +167,15 @@ class Session {
     }
 
     method instance-ids {
-        qqx`aws ec2 describe-instances`
+        qx`aws ec2 describe-instances --query "Reservations[*].Instances[*].{Instance:InstanceId}"`
         andthen 
-            .&from-json<Reservations>[0]<Instances>.map(*<InstanceId>);
+            .&from-json.map(*.first).map(*<Instance>);
+    }
+
+    method instance-kps {
+        qx`aws ec2 describe-instances --query "Reservations[*].Instances[*].{KeyName:KeyName}"`
+        andthen 
+            .&from-json.map(*.first).map(*<KeyName>);
     }
 }
 
@@ -234,9 +241,14 @@ class Instance {
     }
 
     method login {
-    #iamerejh .pem.pem
-        my $proc = Proc::Async.new(:w, 'ssh', '-tt', '-o', "StrictHostKeyChecking no", 
-            '-i', "{$!s.kpn}.pem", "ubuntu@$.public-dns-name");
+        my $dns = self.public-dns-name;
+        qqx`ssh-keygen -f "/root/.ssh/known_hosts" -R $dns`;
+
+#iamerejh
+        say "{$!s.kpn}.pem", "ubuntu@$.public-dns-name";
+        #my $proc = Proc::Async.new(:w, 'ssh', '-tt', '-o', "StrictHostKeyChecking no", '-i', "{$!s.kpn}.pem", "ubuntu@$.public-dns-name");
+        dd my @args = ('ssh', '-tt', '-o', "StrictHostKeyChecking no", '-i', "{$!s.kpn}.pem", "ubuntu" ~ '@' ~ "{self.public-dns-name}");
+        my $proc = Proc::Async.new(:w, |@args); 
         $proc.stdout.tap({ print "stdout: $^s" });
         $proc.stderr.tap({ print "stderr: $^s" });
 
@@ -255,14 +267,16 @@ class Instance {
 ## for cmds list & nuke
 my $s = Session.new;
 say $s.instance-ids;
+say $s.instance-kps;
 
 my $i = Instance.new;
 $i.eip-associate;
 $i.public-ip-address.say;
 
 $i.connect.say;
+$i.wait-until-running;
 $i.login;
 
-$i.terminate;
+#$i.terminate;
 say $i.state;
 
