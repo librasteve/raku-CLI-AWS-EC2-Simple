@@ -286,7 +286,21 @@ $i.connect;
 say $i.state;
 #]
 
-sub MAIN( $thing ) {
-    say $thing
+enum Cmd <launch connect>; 
+
+sub MAIN( 
+    Cmd $cmd,       #= One of <launch connect>   
+    Bool :$eip,     #= Allocates (if needed) and Associates Elastic IP 
+) {
+    given $cmd {
+        when 'launch' {
+            my $i = Instance.new;
+            spurt './.racl-temp', $i.id;            
+
+            $i.eip-associate if $eip;
+
+            $i.id.say;
+        }
+    }
 }
 
