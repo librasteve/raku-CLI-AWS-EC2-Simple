@@ -1,3 +1,7 @@
+#!/usr/bin/env raku
+use v6.d;
+use lib '../lib';
+
 use YAMLish;
 use JSON::Fast;
 # first go `aws configure` to populate $HOME/.aws/credentials
@@ -247,7 +251,7 @@ class Instance {
         my $dns = self.public-dns-name;
 
         # since we are changing the host, but keeping the eip, we flush known_hosts
-        qqx`ssh-keygen -f "~/.ssh/known_hosts" -R $dns`;
+        qqx`ssh-keygen -f ~/.ssh/known_hosts -R $dns`;
 
         my $proc = Proc::Async.new(:w, 'ssh', '-tt', '-o', "StrictHostKeyChecking no", '-i', "{$!s.kpn}.pem", "ubuntu@$dns");
         $proc.stdout.tap({ print "stdout: $^s" });
@@ -264,6 +268,7 @@ class Instance {
     }
 }
 
+#`[
 ## for cmds list & nuke
 my $s = Session.new;
 say $s.instance-ids;
@@ -279,4 +284,9 @@ $i.connect;
 
 #$i.terminate;
 say $i.state;
+#]
+
+sub MAIN( $thing ) {
+    say $thing
+}
 
