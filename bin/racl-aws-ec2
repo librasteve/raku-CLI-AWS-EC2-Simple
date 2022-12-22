@@ -23,31 +23,27 @@ say $i.state;
 #]
 
 
-enum CMD <launch state connect>;
+enum Command <launch state connect list>;
 
 sub MAIN(
-    CMD   $cmd,                           #= One of <launch state connect>
-    Bool :$eip,                         #= Allocates (if needed) and Associates Elastic IP
-    Str  :$id, # where /'i-' \w ** 16/,     #= Running InstanceId of form 'i-0785d8bd98b5f458b'
+    Command $cmd,                           #= One of <launch state connect list>
+    Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
+    Str    :$id, # where /'i-' \w ** 16/,   #= Running InstanceId of form 'i-0785d8bd98b5f458b'
 ) {
     say $cmd;
 
-#`[[
     my $s = Session.new;
-    $s.instance-ids;
 
-    my $focus-id;
-#iamerejh fid and id where
-    if $id {
-        if $id !∈ $s.instance-ids.Set {
-            die 'given InstanceId is not present in this Session';
+#iamerejh  ./racl-aws-ec2 --id=i-0785d8bd98b5f458b state
+    sub focus-id {
+        if $id {
+            die "Instance Id $id not found in this Session" unless $id ∈ $s.instance-ids.Set; 
+        } else {
+            $id = slurp './.racl-temp'
         }
-        $focus-id := $id;
-    } else {
-        $focus-id = slurp './.racl-temp'
+        $id
     }
 
-    die $focus-id;
 
     given $cmd {
         when 'launch' {
@@ -59,7 +55,14 @@ sub MAIN(
 
             $i.id.say;
         }
+        when 'list' {
+            say $s.instance-ids
+        }
+        when 'state' {
+            # decide which id
+            focus-id;
+
+        }
     }
-#]]
 }
 
