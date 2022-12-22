@@ -184,7 +184,7 @@ class Instance {
     has $.c = Config.new;
     has $.s = Session.new;
 
-    method TWEAK {
+    method launch {
         say 'launching...';
 
         my $cmd :=

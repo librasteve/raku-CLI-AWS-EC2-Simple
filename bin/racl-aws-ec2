@@ -23,45 +23,69 @@ say $i.state;
 #]
 
 
-enum Command <launch state connect list>;
+enum Command <list launch connect state terminate nuke>;
 
 sub MAIN(
-    Command $cmd,                           #= One of <launch state connect list>
+    Command $cmd,                           #= One of <list launch connect state terminate nuke>
     Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
+    Bool   :$y,                             #= Silence confirmation
     Str    :$id, # where /'i-' \w ** 16/,   #= Running InstanceId of form 'i-0785d8bd98b5f458b'
 ) {
     say $cmd;
 
     my $s = Session.new;
 
-#iamerejh  ./racl-aws-ec2 --id=i-0785d8bd98b5f458b state
     sub focus-id {
         if $id {
-            die "Instance Id $id not found in this Session" unless $id ∈ $s.instance-ids.Set; 
+            if $id ∈ $s.instance-ids.Set {
+                return $id
+            } else {
+                die "Instance Id $id not found in this Session"
+            }
         } else {
-            $id = slurp './.racl-temp'
+            if $s.instance-ids.elems == 1 {
+                return $s.instance-ids[0] 
+            } else {
+                return slurp './.racl-temp'
+            }
         }
-        $id
     }
 
-
     given $cmd {
+        when 'list' {
+            $s.instance-ids.say
+        }
         when 'launch' {
+            if $id  {die 'cannot launch an existing Instance'}
+
             my $i = Instance.new(:$s);
+            $i.launch;
+            
             spurt './.racl-temp', $i.id;     # remember last one
 
             if $eip { $i.eip-associate }
-            if $id  {die 'cannot launch an existing Instance'}
 
-            $i.id.say;
-        }
-        when 'list' {
-            say $s.instance-ids
+            $i.id.say
         }
         when 'state' {
-            # decide which id
-            focus-id;
+            Instance.new( :$s, id => focus-id ).state.say
+        }
+        when 'connect' {
+            Instance.new( :$s, id => focus-id ).connect
+        }
+        when 'terminate' {
+            Instance.new( :$s, id => focus-id ).terminate
+        }
+        when 'nuke' {
+            unless $y {                     # silence check
+                my $check = prompt "This will terminate all instances. You sure (y/N)? ";
 
+                unless $check eq 'y' { die "Aborting operation..." }
+            }
+
+            for $s.instance-ids -> $id {
+                Instance.new( :$s, :$id ).terminate
+            }
         }
     }
 }
