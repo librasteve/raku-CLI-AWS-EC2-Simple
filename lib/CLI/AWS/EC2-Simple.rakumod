@@ -258,6 +258,9 @@ class Instance {
         $proc.say("echo 'yo'");
         $proc.say("id");
 
+        my $launch-perl = slurp 'launch.pl';
+        $proc.say("echo $launch-perl > launch.pl"); 
+
         $proc.say("exit");
         await $promise;
         say "done.";

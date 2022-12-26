@@ -23,10 +23,10 @@ say $i.state;
 #]
 
 
-enum Command <list launch connect state terminate nuke>;
+enum Command <list launch connection-str connect state terminate nuke>;
 
 sub MAIN(
-    Command $cmd,                           #= One of <list launch connect state terminate nuke>
+    Command $cmd,                           #= One of <list launch connect connection-str state terminate nuke>
     Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
     Bool   :$y,                             #= Silence confirmation
     Str    :$id, # where /'i-' \w ** 16/,   #= Running InstanceId of form 'i-0785d8bd98b5f458b'
@@ -72,6 +72,9 @@ sub MAIN(
         }
         when 'connect' {
             Instance.new( :$s, id => focus-id ).connect
+        }
+        when 'connection-str' {
+            Instance.new( :$s, id => focus-id ).connection-str.say
         }
         when 'terminate' {
             Instance.new( :$s, id => focus-id ).terminate
