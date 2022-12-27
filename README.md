@@ -10,8 +10,6 @@
 - apt-get update && apt-get install aws-cli
 - aws configure _[enter your config here]_
 - git clone https://github.com/p6steve/raku-CLI-AWS-EC2-SImple.git
-- cd raku-CLI-AWS-EC2-Simple/.racl-config
-- cat .racl-config/aws-ec2-launch.yaml 
 - cd ../raku-CLI-AWS-EC2-Simple/bin
 - ./racl-aws-ec2 _[enter your commands here]_
 
@@ -31,6 +29,9 @@
 
 This launches the standard AWS Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01.
 Edit this yaml file to meet your needs...
+
+- cd raku-CLI-AWS-EC2-Simple/.racl-config
+- cat .racl-config/aws-ec2-launch.yaml 
 
 ```
 instance:
