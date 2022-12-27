@@ -5,6 +5,7 @@ use JSON::Fast;
 my $et = time;      # for unique names
 
 my %config-yaml := load-yaml("$*HOME/.racl-config/aws-ec2-launch.yaml".IO.slurp);   # only once
+my $setup-text := "$*HOME/.racl-config/setup.pl".IO.slurp;
 
 class Config {
     has %.y; 
@@ -260,8 +261,7 @@ class Instance {
         $proc.say("echo 'Hello, World'");
         $proc.say("id");
 
-        my $text = slurp 'setup.pl';
-        $proc.say("echo \'$text\' > setup.pl");
+        $proc.say("echo \'$setup-text\' > setup.pl");
         $proc.say('cat setup.pl | perl');
         $proc.say('echo PATH=$PATH:/usr/lib/perl6/site/bin >> ~/.bashrc');
         sleep 5;
