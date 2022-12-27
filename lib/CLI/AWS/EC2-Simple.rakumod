@@ -33,7 +33,8 @@ class KeyPair {
     }
 
     method names-from-dir {
-        dir($!dir).grep(/pem/).map({S/.pem//})
+        chdir($*HOME);
+        dir.grep(/pem/).map({S/.pem//})
     }
 
     method create-key-pair {
