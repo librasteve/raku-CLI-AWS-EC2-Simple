@@ -241,9 +241,9 @@ class Instance {
     }
 
     method setup {
-        say "setting up, this can takes a minute or two, please be patient...";
+        say "setting up, this can take a minute or two, please be patient...";
         self.wait-until-running;
-        sleep 10;       # let instance mellow
+        sleep 20;       # let instance mellow
 
         my $dns = self.public-dns-name;
 
@@ -261,11 +261,13 @@ class Instance {
 
         my $text = slurp 'setup.pl';
         $proc.say("echo \'$text\' > setup.pl");
-        $proc.say("cat setup.pl | perl");
+        $proc.say('cat setup.pl | perl');
+        $proc.say('echo PATH=$PATH:/usr/lib/perl6/site/bin >> ~/.bashrc');
+        sleep 5;
 
         $proc.say("exit");
         await $promise;
-        say "done.";
+        say "done!";
     }
 }
 
