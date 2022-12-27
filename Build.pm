@@ -5,7 +5,7 @@ class Build {
         mkdir '.racl-config';
         chdir '.racl-config';
         
-my $text1 = q:to/END/;
+my $text1 = q:to/END1/;
 instance:
     image: 'ami-0f540e9f488cfa27d'
     type: 't2.micro'
@@ -18,11 +18,11 @@ instance:
             - inbound:
                 port: 443 
                 cidr: '0.0.0.0/0'
-END
+END1
 
         qqx`echo \'$text1\' > aws-ec2-launch.yaml`;
         
-my $text = q:to/END/;
+my $text2 = q:to/END2/;
 #!/usr/bin/perl
 `sudo apt-get update -y`;
 
@@ -32,7 +32,7 @@ my $text = q:to/END/;
 
 `sudo apt-get install docker -y`;
 `sudo apt-get install docker-compose -y`;
-END
+END2
 
         qqx`echo \'$text2\' > setup.pl`;
         
