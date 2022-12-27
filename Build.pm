@@ -5,7 +5,7 @@ class Build {
         mkdir '.racl-config';
         chdir '.racl-config';
         
-my $contents = q:to/END/
+my $contents = q:to/END/;
 instance:
     image: 'ami-0f540e9f488cfa27d'
     type: 't2.micro'
