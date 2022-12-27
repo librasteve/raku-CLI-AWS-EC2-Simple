@@ -1,9 +1,10 @@
 use v6.d;
 use Test;
-use WP;
+use lib "../lib";
+use CLI::AWS::EC2-Simple;
 
 plan 1;
 
-ok ::('&main'), 'did &main get exported?';
+ok Config.new, 'did Config get imported?';
 
 #done-testing;
