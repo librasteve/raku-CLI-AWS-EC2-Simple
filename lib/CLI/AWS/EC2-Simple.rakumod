@@ -230,7 +230,7 @@ class Instance {
         $!s.eip.associate( :$!id );     # always associate Elastic IP
     }
 
-    method connection-str {
+    method connect {
         my $dns = self.public-dns-name;
         qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
     }
@@ -240,8 +240,9 @@ class Instance {
         qqx`aws ec2 terminate-instances --instance-ids $!id`
     }
 
-    method connect {
-        say "connecting...";
+    method setup {
+        say "setting up, this can takes a minute or two, please be patient...";
+        self.wait-until-running;
         sleep 10;       # let instance mellow
 
         my $dns = self.public-dns-name;
@@ -255,35 +256,12 @@ class Instance {
 
         my $promise = $proc.start;
 
-        $proc.say("echo 'yo'");
+        $proc.say("echo 'Hello, World'");
         $proc.say("id");
 
-#iamerejh vvv works, maybe echo one line at a time >> wise?
-        ##my $text = '`sudo apt-get update`;';
-        my $text = '`git clone https://github.com/p6steve/raku-CLI-AWS-EC2-Simple.git`;';
-        ##my $text = slurp 'launch.pl';
-
-        ##$proc.say(q`echo 'print("jojo\n");' > test2.pl`);
-        $proc.say("echo \'$text\' > test2.pl");
-        $proc.say(q`cat test2.pl | perl`);
-
-
-
-#`[
-        my @launch-perl = slurp('launch.pl').lines.grep({ ! /'#'/ });
-        @launch-perl = ['test2.pl',];
-
-        for @launch-perl -> $line {
-            $line.say;
-            $proc.say("cat $line | perl"); 
-        }
-#]
-        
-        
-#`[
-        my $launch-perl = slurp 'launch.pl';
-        $proc.say('cat' ~ $launch-perl ~ ' | perl'); 
-#]
+        my $text = slurp 'setup.pl';
+        $proc.say("echo \'$text\' > setup.pl");
+        $proc.say("cat setup.pl | perl");
 
         $proc.say("exit");
         await $promise;

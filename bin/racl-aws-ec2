@@ -4,32 +4,15 @@ use CLI::AWS::EC2-Simple;
 
 # first go `aws configure` to populate $HOME/.aws/credentials
 
-#`[
-## for cmds list & nuke
-my $s = Session.new;
-say $s.instance-ids;
-say $s.instance-kps;
-
-my $i = Instance.new;
-
-$i.eip-associate;
-$i.public-ip-address.say;
-
-$i.connection-str.say;
-$i.connect;
-
-#$i.terminate;
-say $i.state;
-#]
-
-
-enum Command <list launch connection-str connect state terminate nuke>;
+enum Command <list launch setup connect state terminate nuke>;
 
 sub MAIN(
-    Command $cmd,                           #= One of <list launch connect connection-str state terminate nuke>
+    Command $cmd,                           #= One of <list launch setup connect state terminate nuke>
+    Str    :$id,                            #= Running InstanceId of form 'i-0785d8bd98b5f458b'
+    Bool   :$nsu,                           #= No setup (suppress launch from running setup)
     Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
-    Bool   :$y,                             #= Silence confirmation
-    Str    :$id, # where /'i-' \w ** 16/,   #= Running InstanceId of form 'i-0785d8bd98b5f458b'
+    Bool   :$y,                             #= Silence confirmation <nuke> cmd only
+    #Str    :$id, # where /'i-' \w ** 16/,   #= Running InstanceId of form 'i-0785d8bd98b5f458b'
 ) {
     say $cmd;
 
@@ -53,7 +36,10 @@ sub MAIN(
 
     given $cmd {
         when 'list' {
-            $s.instance-ids.say
+            for $s.instance-ids.sort -> $id {
+                my $i = Instance.new( :$s, :$id );
+                say "$id =>  {$i.state}";
+            }
         }
         when 'launch' {
             if $id  {die 'cannot launch an existing Instance'}
@@ -65,16 +51,18 @@ sub MAIN(
 
             if $eip { $i.eip-associate }
 
+            if ! $nsu { $i.setup }
+
             $i.id.say
         }
         when 'state' {
             Instance.new( :$s, id => focus-id ).state.say
         }
-        when 'connect' {
-            Instance.new( :$s, id => focus-id ).connect
+        when 'setup' {
+            Instance.new( :$s, id => focus-id ).setup
         }
-        when 'connection-str' {
-            Instance.new( :$s, id => focus-id ).connection-str.say
+        when 'connect' {
+            Instance.new( :$s, id => focus-id ).connect.say
         }
         when 'terminate' {
             Instance.new( :$s, id => focus-id ).terminate
