@@ -5,7 +5,7 @@ class Build {
         mkdir '.racl-config';
         chdir '.racl-config';
         
-my $contents = q:to/END/;
+my $text = q:to/END/;
 instance:
     image: 'ami-0f540e9f488cfa27d'
     type: 't2.micro'
@@ -19,7 +19,7 @@ instance:
                 port: 443 
                 cidr: '0.0.0.0/0'
 END
-        qqx`cat $contents > aws-ec2-launch.yaml`;
+        qqx`echo \'$text\ > aws-ec2-launch.yaml`;
         
         warn 'Build successful';
         
