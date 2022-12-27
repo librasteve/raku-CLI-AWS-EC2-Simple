@@ -9,9 +9,8 @@
 
 - apt-get update && apt-get install aws-cli
 - aws configure _[enter your config here]_
-- git clone https://github.com/p6steve/raku-CLI-AWS-EC2-SImple.git
-- cd ../raku-CLI-AWS-EC2-Simple/bin
-- ./racl-aws-ec2 _[enter your commands here]_
+- zef install CLI::AWS::EC2-Simple
+- racl-aws-ec2 _[enter your commands here]_
 
 ## Usage
 
@@ -27,10 +26,9 @@
 
 ## Config
 
-This launches the standard AWS Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01.
+```launch``` reads ```aws-ec2-launch.yaml``` which is preloaded with the standard AWS Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01.
 Edit this yaml file to meet your needs...
 
-- cd raku-CLI-AWS-EC2-Simple/.racl-config
 - cat .racl-config/aws-ec2-launch.yaml 
 
 ```
@@ -46,6 +44,24 @@ instance:
             - inbound:
                 port: 443 
                 cidr: '0.0.0.0/0'
+```
+
+## Setup
+
+```setup``` deploys docker, docker-compose, raku and zef to the launchee...
+
+- cat .racl-config/launch.pl
+
+```
+#!/usr/bin/perl
+`sudo apt-get update -y`;
+
+`sudo apt-get install rakudo -y`;
+`sudo git clone https://github.com/ugexe/zef.git`;
+`sudo raku -I./zef zef/bin/zef install ./zef --/test`;
+
+`sudo apt-get install docker -y`;
+`sudo apt-get install docker-compose -y`;
 ```
 
 ## Wordpress Deploy & Control
