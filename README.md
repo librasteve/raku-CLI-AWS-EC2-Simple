@@ -15,6 +15,18 @@
 - cd ../raku-CLI-AWS-EC2-Simple/bin
 - ./racl-aws-ec2 _[enter your commands here]_
 
+## Usage
+
+```
+./racl-aws-ec2 [--id=<Str>] [--nsu] [--eip] [-y] <cmd>
+  
+    <cmd>         One of <list launch setup connect state terminate nuke>
+    --id=<Str>    Running InstanceId of form 'i-0785d8bd98b5f458b'
+    --nsu         No setup (suppress launch from running setup)
+    --eip         Allocates (if needed) and Associates Elastic IP
+    -y            Silence confirmation <nuke> cmd only
+```
+
 ## Config
 
 This launches the standard AWS Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01.
@@ -33,18 +45,6 @@ instance:
             - inbound:
                 port: 443 
                 cidr: '0.0.0.0/0'
-```
-
-## Usage
-
-```
-./racl-aws-ec2 [--id=<Str>] [--nsu] [--eip] [-y] <cmd>
-  
-    <cmd>         One of <list launch setup connect state terminate nuke>
-    --id=<Str>    Running InstanceId of form 'i-0785d8bd98b5f458b'
-    --nsu         No setup (suppress launch from running setup)
-    --eip         Allocates (if needed) and Associates Elastic IP
-    -y            Silence confirmation <nuke> cmd only
 ```
 
 ## Wordpress Deploy & Control
