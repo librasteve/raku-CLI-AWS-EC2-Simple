@@ -23,7 +23,7 @@ class Config {
 }
 
 class KeyPair {
-    has $.dir = '.';
+    has $.dir = "$*HOME";
     has $.name;
 
     method names-from-aws {
