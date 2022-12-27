@@ -38,7 +38,7 @@ sub MAIN(
         when 'list' {
             for $s.instance-ids.sort -> $id {
                 my $i = Instance.new( :$s, :$id );
-                say "$id =>  {$i.state}";
+                say "$id => {$i.state}";
             }
         }
         when 'launch' {
