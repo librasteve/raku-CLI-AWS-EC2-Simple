@@ -33,7 +33,7 @@ class KeyPair {
     }
 
     method names-from-dir {
-        chdir($*HOME);
+        chdir($!dir);
         dir.grep(/pem/).map({S/.pem//})
     }
 
