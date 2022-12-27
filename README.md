@@ -24,6 +24,8 @@
     -y            Silence confirmation <nuke> cmd only
 ```
 
+Will make a ```MyKeyPair1672164025.pem``` from your credentials in your $*HOME dir
+
 ## Config
 
 ```launch``` reads ```aws-ec2-launch.yaml``` which is preloaded with the standard AWS Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01.
