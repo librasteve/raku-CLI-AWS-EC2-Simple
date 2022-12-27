@@ -43,6 +43,7 @@ class KeyPair {
     }
 
     method TWEAK {
+        say $!dir;
         for self.names-from-dir -> $n {
             if $n ∈ self.names-from-aws.Set {   # is there a matching .pem file in dir 
                 $!name := $n;
