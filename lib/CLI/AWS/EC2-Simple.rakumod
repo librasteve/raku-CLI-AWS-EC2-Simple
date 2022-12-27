@@ -233,6 +233,8 @@ class Instance {
     }
 
     method connect {
+        self.wait-until-running;
+        
         my $dns = self.public-dns-name;
         qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
     }
