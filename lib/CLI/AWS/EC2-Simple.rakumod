@@ -4,7 +4,7 @@ use JSON::Fast;
 
 my $et = time;      # for unique names
 
-my %config-yaml := load-yaml('../.racl-config/aws-ec2-launch.yaml'.IO.slurp);   # only once
+my %config-yaml := load-yaml("$*HOME/.racl-config/aws-ec2-launch.yaml".IO.slurp);   # only once
 
 class Config {
     has %.y; 
