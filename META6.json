@@ -14,7 +14,7 @@
   "build-depends": [],
   "test-depends": [],
   "provides": {
-    "CLI::AWS::EC2-Simpl": "lib/CLI/AWS/EC2-Simple.rakumod"
+    "CLI::AWS::EC2-Simple": "lib/CLI/AWS/EC2-Simple.rakumod"
   },
   "resources": [],
   "license": "Artistic-2.0",
