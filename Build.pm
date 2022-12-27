@@ -19,7 +19,7 @@ instance:
                 port: 443 
                 cidr: '0.0.0.0/0'
 END
-        qqx`echo \'$text\ > aws-ec2-launch.yaml`;
+        qqx`echo \'$text\' > aws-ec2-launch.yaml`;
         
         warn 'Build successful';
         
