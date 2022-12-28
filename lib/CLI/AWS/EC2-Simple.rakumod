@@ -1,3 +1,5 @@
+unit module CLI::AWS::EC2-Simple:ver<0.0.2>:auth<Steve Roe (p6steve@furnival.net)>;
+
 use YAMLish;
 use JSON::Fast;
 # first go `aws configure` to populate $HOME/.aws/credentials
