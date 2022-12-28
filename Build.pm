@@ -2,8 +2,8 @@ class Build {
     method build($dist-path) {
         
         chdir $*HOME;
-        mkdir '.racl-config';
-        chdir '.racl-config';
+        mkdir '.raws-config';
+        chdir '.raws-config';
         
 my $text1 = q:to/END1/;
 instance:

@@ -29,7 +29,7 @@ sub MAIN(
             if $s.instance-ids.elems == 1 {
                 return $s.instance-ids[0] 
             } else {
-                return slurp './.racl-temp'
+                return slurp './.raws-temp'
             }
         }
     }
@@ -47,7 +47,7 @@ sub MAIN(
             my $i = Instance.new(:$s);
             $i.launch;
             
-            spurt './.racl-temp', $i.id;     # remember last one
+            spurt './.raws-temp', $i.id;     # remember last one
 
             if $eip { $i.eip-associate }
 

@@ -10,12 +10,12 @@
 - apt-get update && apt-get install aws-cli
 - aws configure _[enter your config here]_
 - zef install CLI::AWS::EC2-Simple
-- racl-aws-ec2 _[enter your commands here]_
+- raws-ec2 _[enter your commands here]_
 
 ## Usage
 
 ```
-./racl-aws-ec2 [--id=<Str>] [--nsu] [--eip] [-y] <cmd>
+./raws-ec2 [--id=<Str>] [--nsu] [--eip] [-y] <cmd>
   
     <cmd>         One of <list launch setup connect state terminate nuke>
     --id=<Str>    Running InstanceId of form 'i-0785d8bd98b5f458b'
@@ -31,7 +31,7 @@ Will make an (e.g.) ```MyKeyPair1672164025.pem``` from your credentials in your 
 ```launch``` reads ```aws-ec2-launch.yaml``` which is preloaded with the standard AWS Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01.
 Edit this yaml file to meet your needs...
 
-- cat .racl-config/aws-ec2-launch.yaml 
+- cat .raws-config/aws-ec2-launch.yaml 
 
 ```
 instance:
@@ -52,7 +52,7 @@ instance:
 
 ```setup``` deploys docker, docker-compose, raku and zef to the launchee...
 
-- cat .racl-config/launch.pl
+- cat .raws-config/launch.pl
 
 ```
 #!/usr/bin/perl
