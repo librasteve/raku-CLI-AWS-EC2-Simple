@@ -9,7 +9,7 @@ my $et = time;      # for unique names
 my %config-yaml := load-yaml("$*HOME/.raws-config/aws-ec2-launch.yaml".IO.slurp);   # only once
 my $setup-text := "$*HOME/.raws-config/setup.pl".IO.slurp;
 
-class Config {
+class Config is export {
     has %.y; 
     has $.image;
     has $.type;
@@ -159,7 +159,7 @@ class SecurityGroup {
     }
 }
 
-class Session {
+class Session is export {
     has $.c = Config.new;
     has $.kpn = KeyPair.new.name;
     has $.vpc-id = VPC.new.id;
@@ -183,7 +183,7 @@ class Session {
     }
 }
 
-class Instance {
+class Instance is export {
     has $.id;
     has $.c = Config.new;
     has $.s = Session.new;
