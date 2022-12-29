@@ -1,6 +1,6 @@
 use v6.d;
 use Test;
-use lib "../lib";
+use lib "./lib";
 use CLI::AWS::EC2-Simple;
 
 plan 1;
