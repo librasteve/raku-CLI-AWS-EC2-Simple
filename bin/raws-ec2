@@ -54,7 +54,6 @@ sub MAIN(
             if ! $nsu { $i.setup }
 
             $i.id.say;
-            $i.connect.say;
         }
         when 'state' {
             Instance.new( :$s, id => focus-id ).state.say
