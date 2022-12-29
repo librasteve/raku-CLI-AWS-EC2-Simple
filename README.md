@@ -1,9 +1,12 @@
 [![License: Artistic-2.0](https://img.shields.io/badge/License-Artistic%202.0-0298c3.svg)](https://opensource.org/licenses/Artistic-2.0)
 
-### THIS MODULE IS EXPERIMENTAL AND SUBJECT TO CHANGE WITHOUT NOTICE
-### PLEASE EXERCISE CAUTION USING AWSCLI SINCE IT WILL CREATE BILLABLE AWS SERVICES IN YOUR ACCOUNT AND MAY NOT TERMINATE THEM AUTOMATICALLY
+### _PLEASE EXERCISE CAUTION USING AWSCLI SINCE IT WILL CREATE BILLABLE AWS SERVICES IN YOUR ACCOUNT AND MAY NOT TERMINATE THEM AUTOMATICALLY_
 
 # Raku CLI::AWS::EC2-Simple
+
+This module provide a simple abstraction AWS command line interface for Amazon's EC2 compute web service.
+
+If you encounter a feature of EC2 you want that's not implemented by this module (and there are many), please consider sending a pull request.
 
 ## Getting Started
 
