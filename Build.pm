@@ -18,6 +18,12 @@ instance:
             - inbound:
                 port: 443 
                 cidr: '0.0.0.0/0'
+            - inbound:
+                port: 8080
+                cidr: '0.0.0.0/0'
+            - inbound:
+                port: 8888
+                cidr: '0.0.0.0/0'
 END1
 
         qqx`echo \'$text1\' > aws-ec2-launch.yaml`;
