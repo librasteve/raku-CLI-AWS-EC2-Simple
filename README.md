@@ -10,8 +10,8 @@ If you encounter a feature of EC2 you want that's not implemented by this module
 
 ## Getting Started
 
-- apt-get update && apt-get install aws-cli
-- aws configure _[enter your config here]_
+- apt-get update && apt-get install aws-cli [macOS brew update && brew install awscli]
+- aws configure _[enter your config here]_  (output format 'json')
 - zef install CLI::AWS::EC2-Simple
 - raws-ec2 _[enter your commands here]_
 
@@ -38,18 +38,30 @@ Edit this yaml file to meet your needs...
 
 ```
 instance:
-    image: 'ami-0f540e9f488cfa27d'
-    type: 't2.micro'
+    image: ami-0f540e9f488cfa27d            # <== the standard, clean AWS Ubuntu
+    #image: ami-0ebdbe39cf24185c1            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
+    type: t2.micro
     security-group:
-        name: 'MySG'
+        name: MySG
         rules:
             - inbound:
+                port: 22  
+                cidr: 0.0.0.0/0
+            - inbound:
                 port: 80
-                cidr: '0.0.0.0/0'
+                cidr: 0.0.0.0/0
             - inbound:
                 port: 443 
-                cidr: '0.0.0.0/0'
+                cidr: 0.0.0.0/0
+            - inbound:
+                port: 8080
+                cidr: 0.0.0.0/0
+            - inbound:
+                port: 8888
+                cidr: 0.0.0.0/0
 ```
+
+### _PLEASE REVIEW SECURITY GROUP RULES AND ADAPT TO YOUR NEEDS - SPECIFICALLY REMOVE THE PORT:22 RULE UNLESS YOU WANT ALL IPS TO HAVE ACCESS_
 
 ## Setup
 
