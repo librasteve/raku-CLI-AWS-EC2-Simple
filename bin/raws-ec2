@@ -4,10 +4,10 @@ use CLI::AWS::EC2-Simple;
 
 # first go `aws configure` to populate $HOME/.aws/credentials
 
-enum Command <list launch setup connect state terminate nuke>;
+enum Command <list launch setup connect state stop start terminate nuke>;
 
 sub MAIN(
-    Command $cmd,                           #= One of <list launch setup connect state terminate nuke>
+    Command $cmd,                           #= One of <list launch setup connect state stop start terminate nuke>
     Str    :$id,                            #= Running InstanceId of form 'i-0785d8bd98b5f458b'
     Bool   :$nsu,                           #= No setup (suppress launch from running setup)
     Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
@@ -55,14 +55,20 @@ sub MAIN(
 
             $i.id.say;
         }
-        when 'state' {
-            Instance.new( :$s, id => focus-id ).state.say
-        }
         when 'setup' {
             Instance.new( :$s, id => focus-id ).setup
         }
         when 'connect' {
             Instance.new( :$s, id => focus-id ).connect.say
+        }
+        when 'state' {
+            Instance.new( :$s, id => focus-id ).state.say
+        }
+        when 'stop' {
+            Instance.new( :$s, id => focus-id ).stop
+        }
+        when 'start' {
+            Instance.new( :$s, id => focus-id ).start
         }
         when 'terminate' {
             Instance.new( :$s, id => focus-id ).terminate
