@@ -230,6 +230,7 @@ class Instance is export {
 
     method eip-associate {
         self.wait-until-running;
+        
         say 'associating eip...'; 
         $!s.eip.associate( :$!id );     # always associate Elastic IP
     }
@@ -245,6 +246,16 @@ class Instance is export {
         say 'terminating...';
         qqx`aws ec2 terminate-instances --instance-ids $!id`
     }
+    
+    method stop {
+        say 'stopping...';
+        qqx`aws ec2 stop-instances --instance-ids $!id`
+    }
+    
+    method start {
+        say 'starting...';
+        qqx`aws ec2 start-instances --instance-ids $!id`
+    }  
 
     method setup {
         say "setting up, this can take a minute or two, please be patient...";
