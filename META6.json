@@ -1,7 +1,7 @@
 {
   "name": "CLI::AWS::EC2-Simple",
   "description": "Simple AWS EC2 CLI command",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "perl": "6.d",
   "authors": [
     "p6steve"
