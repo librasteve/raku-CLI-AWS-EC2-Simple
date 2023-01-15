@@ -20,7 +20,7 @@ If you encounter a feature of EC2 you want that's not implemented by this module
 ```
 ./raws-ec2 [--id=<Str>] [--nsu] [--eip] [-y] <cmd>
   
-    <cmd>         One of <list launch setup connect state terminate nuke>
+    <cmd>         One of <list launch setup connect state stop start terminate nuke>
     --id=<Str>    Running InstanceId of form 'i-0785d8bd98b5f458b'
     --nsu         No setup (suppress launch from running setup)
     --eip         Allocates (if needed) and Associates Elastic IP
