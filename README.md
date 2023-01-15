@@ -4,7 +4,7 @@
 
 # Raku CLI::AWS::EC2-Simple
 
-This module provide a simple abstraction AWS command line interface for Amazon's EC2 compute web service.
+This module provide a simple abstraction of the AWS command line interface, aka [awscli](https://aws.amazon.com/cli/), for Amazon's EC2 compute web service.
 
 If you encounter a feature of EC2 you want that's not implemented by this module (and there are many), please consider sending a pull request.
 
