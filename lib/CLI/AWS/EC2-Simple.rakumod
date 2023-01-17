@@ -221,9 +221,9 @@ class Instance is export {
             "--security-group-ids {$!s.sg.id}";
 
         my $den = 'DeviceName=' ~ $!i.device-name; 
-        my $ebs = 'Ebs={VolumeSize=' ~ $!c.storage ~ ',DeleteOnTermination=true}';
+        my $ebs = 'Ebs={VolumeSize=' ~ $!c.storage ~ '}'; 
         $cmd ~= " --block-device-mapping $den,$ebs" if $!c.storage;
-            
+
         qqx`$cmd` andthen
             $!id = .&from-json<Instances>[0]<InstanceId>;
     }
