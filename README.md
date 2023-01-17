@@ -40,6 +40,8 @@ Edit this yaml file to meet your needs...
 instance:
     image: ami-0f540e9f488cfa27d            # <== the standard, clean AWS Ubuntu
     #image: ami-0ebdbe39cf24185c1            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
+    type: t2.micro                          # <== the basic, free tier eligible test machine
+    #type: c6a.4xlarge                       # <== my choice of reasonably priced server class machine
     type: t2.micro
     storage: 30                             # <== EBS size for launch
     security-group:
