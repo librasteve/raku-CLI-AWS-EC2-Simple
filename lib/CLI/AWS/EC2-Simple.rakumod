@@ -220,6 +220,7 @@ class Instance is export {
             "--key-name {$!s.kpn} " ~
             "--security-group-ids {$!s.sg.id}";
 
+        # viz. https://stackoverflow.com/questions/53369224/how-to-launch-ec2-instance-with-custom-root-volume-ebs-size-more-than-8gb-usin
         my $den = 'DeviceName=' ~ $!i.device-name; 
         my $ebs = 'Ebs={VolumeSize=' ~ $!c.storage ~ '}'; 
         $cmd ~= " --block-device-mapping $den,$ebs" if $!c.storage;
