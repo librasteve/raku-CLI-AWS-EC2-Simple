@@ -13,6 +13,7 @@ class Config is export {
     has %.y; 
     has $.image;
     has $.type;
+    has $.storage;
     has $.sg-name = 'MySG';
     has @.sg-rules;
 
@@ -20,8 +21,27 @@ class Config is export {
         %!y        := %config-yaml; 
         $!image    := %!y<instance><image>;
         $!type     := %!y<instance><type>;
+        $!storage  := %!y<instance><storage>;
         $!sg-name  := %!y<instance><security-group><name>;
         @!sg-rules := %!y<instance><security-group><rules>;
+    }
+}
+
+class Image {
+    has $.c;
+
+    method describe {
+        qqx`aws ec2 describe-images --image-id {$!c.image}` 
+        andthen
+            .&from-json<Images>[0]
+    }
+
+    method block-device-mapping {
+        self.describe<BlockDeviceMappings>[0]
+    }
+
+    method device-name {
+        self.describe<BlockDeviceMappings>[0]<DeviceName>
     }
 }
 
@@ -185,18 +205,24 @@ class Session is export {
 
 class Instance is export {
     has $.id;
+    has $.vol-id;
     has $.c = Config.new;
+    has $.i = Image.new( :$!c );
     has $.s = Session.new;
 
     method launch {
         say 'launching...';
 
-        my $cmd :=
+        my $cmd =
             "aws ec2 run-instances " ~
             "--image-id {$!c.image} " ~
             "--instance-type {$!c.type} " ~
             "--key-name {$!s.kpn} " ~
             "--security-group-ids {$!s.sg.id}";
+
+        my $den = 'DeviceName=' ~ $!i.device-name; 
+        my $ebs = 'Ebs={VolumeSize=' ~ $!c.storage ~ ',DeleteOnTermination=true}';
+        $cmd ~= " --block-device-mapping $den,$ebs" if $!c.storage;
             
         qqx`$cmd` andthen
             $!id = .&from-json<Instances>[0]<InstanceId>;
@@ -214,6 +240,10 @@ class Instance is export {
 
     method public-ip-address {
         self.describe<PublicIpAddress>
+    }
+
+    method availability-zone {
+        self.describe<Placement><AvailabilityZone>
     }
 
     method state {

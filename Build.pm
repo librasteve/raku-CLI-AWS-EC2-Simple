@@ -9,6 +9,7 @@ my $text1 = q:to/END1/;
 instance:
     image: 'ami-0f540e9f488cfa27d'
     type: 't2.micro'
+    storage: 30
     security-group:
         name: 'MySG'
         rules:
