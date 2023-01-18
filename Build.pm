@@ -7,24 +7,30 @@ class Build {
         
 my $text1 = q:to/END1/;
 instance:
-    image: 'ami-0f540e9f488cfa27d'
-    type: 't2.micro'
-    storage: 30
+    image: ami-0f540e9f488cfa27d            # <== the standard, clean AWS Ubuntu
+    #image: ami-0ebdbe39cf24185c1            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
+    type: t2.micro                          # <== the basic, free tier eligible test machine
+    #type: c6a.4xlarge                       # <== my choice of reasonably priced server class machine
+    type: t2.micro
+    storage: 30                             # <== EBS size for launch
     security-group:
-        name: 'MySG'
+        name: MySG
         rules:
             - inbound:
+                port: 22  
+                cidr: 0.0.0.0/0
+            - inbound:
                 port: 80
-                cidr: '0.0.0.0/0'
+                cidr: 0.0.0.0/0
             - inbound:
                 port: 443 
-                cidr: '0.0.0.0/0'
+                cidr: 0.0.0.0/0
             - inbound:
                 port: 8080
-                cidr: '0.0.0.0/0'
+                cidr: 0.0.0.0/0
             - inbound:
                 port: 8888
-                cidr: '0.0.0.0/0'
+                cidr: 0.0.0.0/0
 END1
 
         qqx`echo \'$text1\' > aws-ec2-launch.yaml`;
