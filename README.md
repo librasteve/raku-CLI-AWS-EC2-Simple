@@ -10,7 +10,7 @@ If you encounter a feature of EC2 you want that's not implemented by this module
 
 ## Getting Started
 
-- apt-get update && apt-get install aws-cli [macOS brew update && brew install awscli]
+- apt-get update && apt-get install awscli [macOS brew update && brew install awscli]
 - aws configure _[enter your config here]_  (output format 'json')
 - zef install CLI::AWS::EC2-Simple
 - raws-ec2 _[enter your commands here]_
