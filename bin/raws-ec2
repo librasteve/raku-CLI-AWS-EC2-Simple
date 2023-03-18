@@ -19,17 +19,26 @@ sub MAIN(
     my $s = Session.new;
 
     sub focus-id {
-        if $id {
+        if $id {				#id is specified
+
             if $id ∈ $s.instance-ids.Set {
                 return $id
             } else {
                 die "Instance Id $id not found in this Session"
             }
-        } else {
-            if $s.instance-ids.elems == 1 {
+
+        } else {				#id is not specified
+
+            if $s.instance-ids.elems == 1 {	#only one id in active set
                 return $s.instance-ids[0] 
-            } else {
-                return slurp './.raws-temp'
+
+            } else {				#id in .raws-temp file is in active set
+		my $temp-id = return slurp './.raws-temp';
+		if $temp-id ∈ $s.instance-ids.Set {
+		    return $temp-id
+		} else {
+		    die "Instance Id $temp-id not found in this Session, perhaps it was terminated"
+		}
             }
         }
     }
