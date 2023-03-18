@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/raku-WP.iml" filepath="$PROJECT_DIR$/.idea/raku-WP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/raku-CLI-AWS-EC2-Simple.iml" filepath="$PROJECT_DIR$/raku-CLI-AWS-EC2-Simple.iml" />
     </modules>
   </component>
 </project>
