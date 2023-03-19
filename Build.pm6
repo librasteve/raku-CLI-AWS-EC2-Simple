@@ -41,6 +41,7 @@ my $text2 = q:to/END2/;
 `sudo apt-get install rakudo -y`;
 `sudo git clone https://github.com/ugexe/zef.git`;
 `sudo raku -I./zef zef/bin/zef install ./zef --/test`;
+`zef install MIME::Base64 YAMLish JSON::Fast --/test`;
 
 `sudo apt-get install docker -y`;
 `sudo apt-get install docker-compose -y`;
