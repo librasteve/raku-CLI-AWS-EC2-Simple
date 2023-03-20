@@ -307,9 +307,9 @@ class Instance is export {
         $proc.say("echo 'Hello, World'");
         $proc.say("id");
 
-        $proc.say('echo PATH=$PATH:/usr/lib/perl6/site/bin:/home/ubuntu/.raku/bin >> ~/.bashrc');
         $proc.say("echo \'$setup-text\' > setup.pl");
         $proc.say('cat setup.pl | perl');
+        $proc.say('echo PATH=$PATH:/usr/lib/perl6/site/bin:/home/ubuntu/.raku/bin >> ~/.bashrc');
         sleep 5;
 
         $proc.say("exit");
