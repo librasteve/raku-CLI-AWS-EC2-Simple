@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="install libmime">
+    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="mv path up">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build.pm6" beforeDir="false" afterPath="$PROJECT_DIR$/Build.pm6" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/CLI/AWS/EC2-Simple.rakumod" beforeDir="false" afterPath="$PROJECT_DIR$/lib/CLI/AWS/EC2-Simple.rakumod" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +53,7 @@
       <workItem from="1679151597072" duration="21000" />
       <workItem from="1679161188217" duration="422000" />
       <workItem from="1679207769059" duration="742000" />
-      <workItem from="1679240488797" duration="2455000" />
+      <workItem from="1679240488797" duration="3669000" />
     </task>
     <task id="LOCAL-00001" summary="add IntelliJ project files">
       <created>1679161219735</created>
@@ -77,7 +76,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679291329146</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="mv path up">
+      <created>1679292958146</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1679292958146</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -99,7 +105,8 @@
     <MESSAGE value="add IntelliJ project files" />
     <MESSAGE value="add zef prerequisites to setup.pl" />
     <MESSAGE value="install libmime" />
-    <option name="LAST_COMMIT_MESSAGE" value="install libmime" />
+    <MESSAGE value="mv path up" />
+    <option name="LAST_COMMIT_MESSAGE" value="mv path up" />
   </component>
   <component name="edument.perl6idea.pm.RakuPackageManagerManager">
     <pmList />
