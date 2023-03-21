@@ -1,4 +1,4 @@
-unit module CLI::AWS::EC2-Simple:ver<0.0.6>:auth<Steve Roe (p6steve@furnival.net)>;
+unit module CLI::AWS::EC2-Simple:ver<0.0.7>:auth<Steve Roe (p6steve@furnival.net)>;
 
 use YAMLish;
 use JSON::Fast;
@@ -289,7 +289,7 @@ class Instance is export {
     }  
 
     method setup {
-        say "setting up, this can take a minute or two, please be patient...";
+        say "setting up, this can take some minutes (longer if on a t2.micro) please be patient...";
         self.wait-until-running;
         sleep 20;       # let instance mellow
 

@@ -8,7 +8,7 @@ class Build {
 my $text1 = q:to/END1/;
 instance:
     image: ami-0f540e9f488cfa27d            # <== the standard, clean AWS Ubuntu
-    #image: ami-0ebdbe39cf24185c1            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
+    #image: ami-0c1163e529aeb9b20            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
     type: t2.micro                          # <== the basic, free tier eligible test machine
     #type: c6a.4xlarge                       # <== my choice of reasonably priced server class machine
     storage: 30                             # <== EBS size for launch
