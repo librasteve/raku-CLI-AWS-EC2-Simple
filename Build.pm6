@@ -44,6 +44,9 @@ my $text2 = q:to/END2/;
 
 `sudo apt-get install docker -y`;
 `sudo apt-get install docker-compose -y`;
+
+`sudo apt-get install libmime-base64-urlsafe-perl`;
+`zef install MIME::Base64 YAMLish JSON::Fast --/test --verbose`;
 END2
 
         qqx`echo \'$text2\' > setup.pl`;

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="revert setup --- cant get zef to work" />
+    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="revert setup --- cant get zef to work">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,7 +52,9 @@
       <workItem from="1679151597072" duration="21000" />
       <workItem from="1679161188217" duration="422000" />
       <workItem from="1679207769059" duration="742000" />
-      <workItem from="1679240488797" duration="6490000" />
+      <workItem from="1679240488797" duration="6538000" />
+      <workItem from="1679411687259" duration="6000" />
+      <workItem from="1679411709228" duration="11000" />
     </task>
     <task id="LOCAL-00001" summary="add IntelliJ project files">
       <created>1679161219735</created>
@@ -94,7 +98,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679300335117</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="revert setup --- cant get zef to work">
+      <created>1679300367012</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1679300367012</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
