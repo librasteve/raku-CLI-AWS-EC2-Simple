@@ -16,7 +16,14 @@
   "provides": {
     "CLI::AWS::EC2-Simple": "lib/CLI/AWS/EC2-Simple.rakumod"
   },
-  "resources": [],
+  "resources": [
+    "wordpress/nginx-conf/nginx.conf",
+    "wordpress/nginx-conf/nginx.ssl",
+    "wordpress/docker-compose.yaml",
+    "wordpress/ssl_renew.sh",
+    "wordpress/ssl_renew",
+    "wordpress/.env"
+  ],
   "license": "Artistic-2.0",
   "tags": [
     "AWS",
