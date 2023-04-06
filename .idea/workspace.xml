@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="Build suffix to rakumod">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/.raws-ec2.swp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build.rakumod" beforeDir="false" afterPath="$PROJECT_DIR$/Build.rakumod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/META6.json" beforeDir="false" afterPath="$PROJECT_DIR$/META6.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,6 +16,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -68,6 +78,7 @@
       <workItem from="1679682716332" duration="13000" />
       <workItem from="1679754291568" duration="439000" />
       <workItem from="1679774902959" duration="984000" />
+      <workItem from="1680774045133" duration="177000" />
     </task>
     <task id="LOCAL-00001" summary="add IntelliJ project files">
       <created>1679161219735</created>
