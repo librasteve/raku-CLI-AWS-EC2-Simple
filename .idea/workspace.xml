@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="Build suffix to rakumod">
-      <change afterPath="$PROJECT_DIR$/bin/.raws-ec2.swp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build.rakumod" beforeDir="false" afterPath="$PROJECT_DIR$/Build.rakumod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/META6.json" beforeDir="false" afterPath="$PROJECT_DIR$/META6.json" afterDir="false" />
+    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="fix META6.json">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/.raws-ec2.swp" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +77,7 @@
       <workItem from="1679682716332" duration="13000" />
       <workItem from="1679754291568" duration="439000" />
       <workItem from="1679774902959" duration="984000" />
-      <workItem from="1680774045133" duration="177000" />
+      <workItem from="1680774045133" duration="955000" />
     </task>
     <task id="LOCAL-00001" summary="add IntelliJ project files">
       <created>1679161219735</created>
@@ -157,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679754434688</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fix META6.json">
+      <created>1680774271138</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1680774271138</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,7 +192,8 @@
     <MESSAGE value="update AMI and bump to v0.0.7" />
     <MESSAGE value="tweak instance types" />
     <MESSAGE value="Build suffix to rakumod" />
-    <option name="LAST_COMMIT_MESSAGE" value="Build suffix to rakumod" />
+    <MESSAGE value="fix META6.json" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix META6.json" />
   </component>
   <component name="edument.perl6idea.pm.RakuPackageManagerManager">
     <pmList />
