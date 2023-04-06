@@ -185,6 +185,7 @@ class Session is export {
     has $.vpc-id = VPC.new.id;
     has $.eip = ElasticIP.new;
     has $.sg;
+    has $.q;
 
     method TWEAK {
         $!sg = SecurityGroup.new(:$!vpc-id, :$!c)
@@ -253,10 +254,10 @@ class Instance is export {
 
     method wait-until-running {
         until self.state eq 'running' { 
-            say self.state, '...'; 
+            say self.state, '...' unless $!s.q; 
             sleep 5 
         }
-        say self.state, '...';
+        say self.state, '...' unless $!s.q;
     }
 
     method eip-associate {

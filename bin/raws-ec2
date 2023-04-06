@@ -11,12 +11,13 @@ sub MAIN(
     Str    :$id,                            #= Running InstanceId of form 'i-0785d8bd98b5f458b'
     Bool   :$nsu,                           #= No setup (suppress launch from running setup)
     Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
+    Bool   :$q,                             #= Quiet mode (suppress echo for connect only) 
     Bool   :$y,                             #= Silence confirmation <nuke> cmd only
     #Str    :$id, # where /'i-' \w ** 16/,   #= Running InstanceId of form 'i-0785d8bd98b5f458b'
 ) {
-    say $cmd;
+    say $cmd unless $q;
 
-    my $s = Session.new;
+    my $s = Session.new(:$q);
 
     sub focus-id {
         if $id {				#id is specified
