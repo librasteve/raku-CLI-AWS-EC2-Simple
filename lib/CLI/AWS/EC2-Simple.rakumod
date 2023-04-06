@@ -271,7 +271,8 @@ class Instance is export {
         self.wait-until-running;
         
         my $dns = self.public-dns-name;
-        qq`ssh -tt -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns /bin/bash`
+        qqx`ssh -tt -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns /bin/bash`
+        #qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
     }
 
     method terminate {
