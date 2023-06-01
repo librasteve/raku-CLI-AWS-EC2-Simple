@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="fix META6.json">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/.raws-ec2.swp" beforeDir="false" />
-    </list>
+    <list default="true" id="1cfd33b1-4194-4d01-9306-da182058eb25" name="Changes" comment="fix META6.json" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,6 +75,7 @@
       <workItem from="1679754291568" duration="439000" />
       <workItem from="1679774902959" duration="984000" />
       <workItem from="1680774045133" duration="955000" />
+      <workItem from="1680791795191" duration="113000" />
     </task>
     <task id="LOCAL-00001" summary="add IntelliJ project files">
       <created>1679161219735</created>
