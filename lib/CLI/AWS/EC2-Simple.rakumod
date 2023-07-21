@@ -252,6 +252,10 @@ class Instance is export {
         self.describe<State><Name>
     }
 
+    method nametag {
+        self.describe<Tags>[0]<Value> // '-'
+    }
+
     method wait-until-running {
         until self.state eq 'running' { 
             say self.state, '...' unless $!s.q; 
