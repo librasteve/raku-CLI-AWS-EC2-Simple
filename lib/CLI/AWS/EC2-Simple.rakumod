@@ -11,6 +11,7 @@ my $setup-text := "$*HOME/.raws-config/setup.pl".IO.slurp;
 
 class Config is export {
     has %.y; 
+    has $.nametag;
     has $.image;
     has $.type;
     has $.storage;
@@ -19,6 +20,7 @@ class Config is export {
 
     method TWEAK {
         %!y        := %config-yaml; 
+        $!nametag  := %!y<instance><nametag>;
         $!image    := %!y<instance><image>;
         $!type     := %!y<instance><type>;
         $!storage  := %!y<instance><storage>;
@@ -228,6 +230,12 @@ class Instance is export {
 
         qqx`$cmd` andthen
             $!id = .&from-json<Instances>[0]<InstanceId>;
+
+        $cmd = 
+            "aws ec2 create-tags --resources " ~ $!id ~
+            " --tags Key=Name,Value={$!c.nametag}";
+
+        qqx`$cmd`;
     }
 
     method describe {
