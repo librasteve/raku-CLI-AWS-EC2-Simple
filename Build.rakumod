@@ -7,6 +7,7 @@ class Build {
         
 my $text1 = q:to/END1/;
 instance:
+    nametag: my-instance
     #image: ami-0f540e9f488cfa27d            # <== the standard, clean AWS Ubuntu
     image: ami-0c1163e529aeb9b20            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
     type: t2.micro                          # <== the basic, free tier eligible machine (12 credits/hr)

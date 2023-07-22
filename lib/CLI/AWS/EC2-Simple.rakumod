@@ -223,7 +223,9 @@ class Instance is export {
             "--key-name {$!s.kpn} " ~
             "--security-group-ids {$!s.sg.id}";
 
-        # viz. https://stackoverflow.com/questions/53369224/how-to-launch-ec2-instance-with-custom-root-volume-ebs-size-more-than-8gb-usin
+        # viz. https://stackoverflow.com/questions/53369224/
+        # how-to-launch-ec2-instance-with-custom-root-volume-ebs-size-more-than-8gb-using AWS Cli
+
         my $den = 'DeviceName=' ~ $!i.device-name; 
         my $ebs = 'Ebs={VolumeSize=' ~ $!c.storage ~ '}'; 
         $cmd ~= " --block-device-mapping $den,$ebs" if $!c.storage;
@@ -231,11 +233,7 @@ class Instance is export {
         qqx`$cmd` andthen
             $!id = .&from-json<Instances>[0]<InstanceId>;
 
-        $cmd = 
-            "aws ec2 create-tags --resources " ~ $!id ~
-            " --tags Key=Name,Value={$!c.nametag}";
-
-        qqx`$cmd`;
+        self.nametag: :set;
     }
 
     method describe {
@@ -260,8 +258,20 @@ class Instance is export {
         self.describe<State><Name>
     }
 
-    method nametag {
-        self.describe<Tags>[0]<Value> // '-'
+    multi method nametag {
+        return '-' without self.describe<Tags>;
+
+        my %tags;
+        self.describe<Tags>.map( { %tags{.<Key>} = .<Value> } );
+        %tags<Name> // '-'
+    }
+
+    multi method nametag(:$set!) {
+        my $tag = 
+            "aws ec2 create-tags --resources " ~ $!id ~
+            " --tags Key=Name,Value={$!c.nametag}";
+
+        qqx`$tag`;
     }
 
     method wait-until-running {
