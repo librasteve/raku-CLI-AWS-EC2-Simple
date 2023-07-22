@@ -6,6 +6,8 @@ use CLI::AWS::EC2-Simple;
 
 enum Command <list launch setup ip connect state stop start terminate nuke xxx>;
 
+subset InstId of Str where /^ 'i-' \w ** 17 $/;
+
 sub MAIN(
     Command $cmd,                           #= One of <list launch setup ip connect state stop start terminate nuke>
     Str    :$id,                            #= Running InstanceId of form 'i-0785d8bd98b5f458b'
@@ -13,14 +15,15 @@ sub MAIN(
     Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
     Bool   :$q,                             #= Quiet mode (suppress echo for connect only) 
     Bool   :$y,                             #= Silence confirmation <nuke> cmd only
-    #Str    :$id, # where /'i-' \w ** 16/,   #= Running InstanceId of form 'i-0785d8bd98b5f458b'
 ) {
     say $cmd unless $q;
+
+    die 'Instance Id is wrong, please try again.' if $id && $id !~~ InstId;
 
     my $s = Session.new(:$q);
 
     sub focus-id {
-        if $id {				#id is specified
+        if $id {                            #id is specified
 
             if $id ∈ $s.instance-ids.Set {
                 return $id
@@ -28,18 +31,22 @@ sub MAIN(
                 die "Instance Id $id not found in this Session"
             }
 
-        } else {				#id is not specified
+        } else {                            #id is not specified
 
-            if $s.instance-ids.elems == 1 {	#only one id in active set
+            if $s.instance-ids.elems == 1 {	    #only one id in active set
+
                 return $s.instance-ids[0] 
 
-            } else {				#id in .raws-temp file is in active set
-		my $temp-id = return slurp './.raws-temp';
-		if $temp-id ∈ $s.instance-ids.Set {
-		    return $temp-id
-		} else {
-		    die "Instance Id $temp-id not found in this Session, perhaps it was terminated"
-		}
+            } else {                            #id in .raws-temp file is in active set
+
+                my $temp-id = return slurp './.raws-temp';
+
+                if $temp-id ∈ $s.instance-ids.Set {
+                    return $temp-id
+                } else {
+                    die "Instance Id $temp-id not found in this Session, perhaps it was terminated"
+                }
+
             }
         }
     }
