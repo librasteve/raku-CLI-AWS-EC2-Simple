@@ -6,7 +6,7 @@ use CLI::AWS::EC2-Simple;
 
 enum Command <list launch setup ip connect state stop start terminate nuke>;
 
-subset InstId of Str where /^ 'i-' \w ** 17 $/;
+subset InstId of Str where /^ 'i-' <[0..9a..f]> ** 17 $/;
 
 sub MAIN(
     Command $cmd,                           #= One of <list launch setup ip connect state stop start terminate nuke>
