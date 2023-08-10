@@ -4,9 +4,9 @@ use CLI::AWS::EC2-Simple;
 
 # first go `aws configure` to populate $HOME/.aws/credentials
 
-enum Command <list launch setup ip connect state stop start terminate nuke>;
+enum Command <list launch setup id nametag ip connect state stop start terminate nuke>;
 
-subset InstId of Str where /^ 'i-' <[0..9a..f]> ** 17 $/;
+subset InstanceId of Str where /^ 'i-' <[0..9a..f]> ** 17 $/;
 
 sub MAIN(
     Command $cmd,                           #= One of <list launch setup ip connect state stop start terminate nuke>
@@ -18,37 +18,42 @@ sub MAIN(
 ) {
     say $cmd unless $q;
 
-    die 'Instance Id is wrong, please try again.' if $id && $id !~~ InstId;
+    die 'InstanceId is wrong, please try again.' if $id && $id !~~ InstanceId;
 
     my $s = Session.new(:$q);
 
-    sub focus-id {
+    sub focus-id( $id ) {
+        my $focus-id;
+
         if $id {                            #id is specified
 
             if $id ∈ $s.instance-ids.Set {
-                return $id
+                $focus-id = $id
             } else {
-                die "Instance Id $id not found in this Session"
+                die "InstanceId $id not found in this Session"
             }
 
         } else {                            #id is not specified
 
             if $s.instance-ids.elems == 1 {	    #only one id in active set
 
-                return $s.instance-ids[0] 
+                $focus-id = $s.instance-ids[0] 
 
             } else {                            #id in .raws-temp file is in active set
 
-                my $temp-id = return slurp './.raws-temp';
+                my $temp-id = './.raws-temp'.IO.slurp.chomp;
 
                 if $temp-id ∈ $s.instance-ids.Set {
-                    return $temp-id
+                    $focus-id = $temp-id
                 } else {
-                    die "Instance Id $temp-id not found in this Session, perhaps it was terminated"
+                    die "InstanceId $temp-id not found in this Session, perhaps it was terminated?"
                 }
 
             }
         }
+
+        spurt './.raws-temp', $focus-id;    # remember last one
+        $focus-id                           # return it
     }
 
     given $cmd {
@@ -73,25 +78,31 @@ sub MAIN(
             $i.id.say;
         }
         when 'setup' {
-            Instance.new( :$s, id => focus-id ).setup
+            Instance.new( :$s, id => focus-id($id) ).setup
+        }
+        when 'id' {
+            Instance.new( :$s, id => focus-id($id) ).id.say
+        }
+        when 'nametag' {
+            Instance.new( :$s, id => focus-id($id) ).nametag.say
         }
         when 'ip' {
-            Instance.new( :$s, id => focus-id ).public-ip-address.say
+            Instance.new( :$s, id => focus-id($id) ).public-ip-address.say
         }
         when 'connect' {
-            Instance.new( :$s, id => focus-id ).connect.say
+            Instance.new( :$s, id => focus-id($id) ).connect.say
         }
         when 'state' {
-            Instance.new( :$s, id => focus-id ).state.say
+            Instance.new( :$s, id => focus-id($id) ).state.say
         }
         when 'stop' {
-            Instance.new( :$s, id => focus-id ).stop
+            Instance.new( :$s, id => focus-id($id) ).stop
         }
         when 'start' {
-            Instance.new( :$s, id => focus-id ).start
+            Instance.new( :$s, id => focus-id($id) ).start
         }
         when 'terminate' {
-            Instance.new( :$s, id => focus-id ).terminate
+            Instance.new( :$s, id => focus-id($id) ).terminate
         }
         when 'nuke' {
             unless $y {                     # silence check
