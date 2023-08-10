@@ -1,4 +1,4 @@
-unit module CLI::AWS::EC2-Simple:ver<0.0.9>:auth<Steve Roe (librasteve@furnival.net)>;
+unit module CLI::AWS::EC2-Simple:ver<0.0.10>:auth<Steve Roe (librasteve@furnival.net)>;
 
 use YAMLish;
 use JSON::Fast;
@@ -11,6 +11,7 @@ my $setup-text := "$*HOME/.raws-config/setup.pl".IO.slurp;
 
 class Config is export {
     has %.y; 
+    has $.nametag;
     has $.image;
     has $.type;
     has $.storage;
@@ -19,6 +20,7 @@ class Config is export {
 
     method TWEAK {
         %!y        := %config-yaml; 
+        $!nametag  := %!y<instance><nametag>;
         $!image    := %!y<instance><image>;
         $!type     := %!y<instance><type>;
         $!storage  := %!y<instance><storage>;
@@ -221,13 +223,17 @@ class Instance is export {
             "--key-name {$!s.kpn} " ~
             "--security-group-ids {$!s.sg.id}";
 
-        # viz. https://stackoverflow.com/questions/53369224/how-to-launch-ec2-instance-with-custom-root-volume-ebs-size-more-than-8gb-usin
+        # viz. https://stackoverflow.com/questions/53369224/
+        # how-to-launch-ec2-instance-with-custom-root-volume-ebs-size-more-than-8gb-using AWS Cli
+
         my $den = 'DeviceName=' ~ $!i.device-name; 
         my $ebs = 'Ebs={VolumeSize=' ~ $!c.storage ~ '}'; 
         $cmd ~= " --block-device-mapping $den,$ebs" if $!c.storage;
 
         qqx`$cmd` andthen
             $!id = .&from-json<Instances>[0]<InstanceId>;
+
+        self.nametag: :set;
     }
 
     method describe {
@@ -250,6 +256,22 @@ class Instance is export {
 
     method state {
         self.describe<State><Name>
+    }
+
+    multi method nametag {
+        return '-' without self.describe<Tags>;
+
+        my %tags;
+        self.describe<Tags>.map( { %tags{.<Key>} = .<Value> } );
+        %tags<Name> // '-'
+    }
+
+    multi method nametag(:$set!) {
+        my $tag = 
+            "aws ec2 create-tags --resources " ~ $!id ~
+            " --tags Key=Name,Value={$!c.nametag}";
+
+        qqx`$tag`;
     }
 
     method wait-until-running {
