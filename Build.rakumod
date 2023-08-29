@@ -39,6 +39,7 @@ END1
 my $text2 = q:to/END2/;
 #!/usr/bin/perl
 `sudo apt-get update -y`;
+`sudo apt-get install tree -y`;
 
 `sudo apt-get install rakudo -y`;
 `sudo git clone https://github.com/ugexe/zef.git`;
