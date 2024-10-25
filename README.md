@@ -84,15 +84,6 @@ instance:
 `sudo apt-get install docker-compose -y`;
 ```
 
-## Wordpress Deploy & Control
-
-[This section will probably go into raku-CLI-WP-Simple]
-
-viz. [digital ocean howto](https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose#step-3-defining-services-with-docker-compose)
-
-- client script 'raku-wp --launch'
-
-
 ## NOTES
 
 - unassigned Elastic IPs are chargeable ($5 per month ish), may be better to run one free tier instance
