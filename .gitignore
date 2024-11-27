@@ -10,3 +10,5 @@
 .json.swp
 .yaml.swp
 .pem
+.idea/
+*.iml
