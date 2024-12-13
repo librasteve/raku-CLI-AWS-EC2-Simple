@@ -1,28 +1,25 @@
 {
-  "name": "CLI::AWS::EC2-Simple",
-  "description": "Simple AWS EC2 CLI command",
-  "version": "0.0.10",
-  "perl": "6.d",
-  "authors": [
-    "librasteve"
-  ],
-  "auth": "zef:librasteve",
-  "depends": [
-    "YAMLish",
-    "JSON::Fast"
-  ],
-  "build-depends": [],
-  "test-depends": [],
-  "provides": {
-    "CLI::AWS::EC2-Simple": "lib/CLI/AWS/EC2-Simple.rakumod"
-  },
-  "resources": [],
-  "license": "Artistic-2.0",
-  "tags": [
-    "AWS",
-    "CLI",
-    "EC2"
-  ],
-  "api": "1",
-  "source-url": "git://github.com/librasteve/raku-CLI-AWS-EC2-Simple.git"
+    "name": "CLI::AWS::EC2-Simple",
+    "description": "Simple AWS EC2 CLI command",
+    "version": "0.0.10",
+    "authors": [
+        "librasteve"
+    ],
+    "auth": "zef:librasteve",
+    "depends": [
+        "YAMLish",
+        "JSON::Fast"
+    ],
+    "build-depends": [],
+    "provides": {
+        "CLI::AWS::EC2-Simple": "lib/CLI/AWS/EC2-Simple.rakumod"
+    },
+    "license": "Artistic-2.0",
+    "tags": [
+        "AWS",
+        "CLI",
+        "EC2"
+    ],
+    "api": "1",
+    "source-url": "git://github.com/librasteve/raku-CLI-AWS-EC2-Simple.git"
 }

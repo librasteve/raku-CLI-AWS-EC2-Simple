@@ -7,10 +7,11 @@ class Build {
         
 my $text1 = q:to/END1/;
 instance:
-    nametag: my-instance
-    #image: ami-0f540e9f488cfa27d            # <== the standard, clean AWS Ubuntu
-    image: ami-0c1163e529aeb9b20            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
+    nametag: amitest
+    #image: ami-0e8d228ad90af673b            # <== the standard, clean AWS Ubuntu 24.04LTS
+    image: ami-04bc7403c36ed1222            # <== AWS Ubuntu 24.04LTS plus raws-ec2 setup already applied (use --nsu flag)
     type: t2.micro                          # <== the basic, free tier eligible machine (12 credits/hr)
+    #type: t3.small                          # <== $0.0209/hr viable static WP
     #type: t3.medium                         # <== a step above t2.micro for more beefy server needs
     #type: c6a.4xlarge                       # <== a mega machine for benchmarking
     storage: 30                             # <== EBS size for launch
@@ -39,15 +40,14 @@ END1
 my $text2 = q:to/END2/;
 #!/usr/bin/perl
 `sudo apt-get update -y`;
+`sudo apt-get upgrade -y`;
 `sudo apt-get install tree -y`;
 
 `sudo apt-get install rakudo -y`;
-`sudo git clone https://github.com/ugexe/zef.git`;
-`sudo raku -I./zef zef/bin/zef install ./zef --/test`;
-
-`sudo apt-get install docker -y`;
 `sudo apt-get install docker-compose -y`;
 
+`sudo apt-get install libssl-dev -y`;
+`sudo apt-get install build-essential -y`;
 `sudo apt-get install libmime-base64-urlsafe-perl`;
 `zef install MIME::Base64 YAMLish JSON::Fast --/test --verbose`;
 END2

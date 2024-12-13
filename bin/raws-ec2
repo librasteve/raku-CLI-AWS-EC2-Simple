@@ -13,7 +13,7 @@ sub MAIN(
     Bool   :$nsu,                           #= No setup (suppress launch from running setup)
     Bool   :$eip,                           #= Allocates (if needed) and Associates Elastic IP
     Bool   :$q,                             #= Quiet mode (suppress echo for connect only) 
-    Bool   :$y,                             #= Silence confirmation <nuke> cmd only
+    Bool   :$y,                             #= Silence confirmation <nuke> cmdsonly
 ) {
     say $cmd unless $q;
 
@@ -89,7 +89,7 @@ sub MAIN(
             Instance.new( :$s, id => focus-id($id) ).public-ip-address.say
         }
         when 'connect' {
-            Instance.new( :$s, id => focus-id($id) ).connect.say
+            Instance.new( :$s, id => focus-id($id) ).connect(:$q).say
         }
         when 'state' {
             Instance.new( :$s, id => focus-id($id) ).state.say

@@ -289,8 +289,8 @@ class Instance is export {
         $!s.eip.associate( :$!id );     # always associate Elastic IP
     }
 
-    method connect {
-        self.wait-until-running;
+    method connect(:$q) {
+        self.wait-until-running unless $q;
         
         my $dns = self.public-dns-name;
         qq`ssh -o "StrictHostKeyChecking no" -i "{$!s.kpn}.pem" ubuntu@$dns`
