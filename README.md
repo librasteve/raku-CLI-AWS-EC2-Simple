@@ -76,9 +76,12 @@ instance:
 #!/usr/bin/perl
 `sudo apt-get update -y`;
 
-`sudo apt-get install rakudo -y`;
-`sudo git clone https://github.com/ugexe/zef.git`;
-`sudo raku -I./zef zef/bin/zef install ./zef --/test`;
+`curl https://rakubrew.org/install-on-perl.sh | sh`;
+`eval "$(/home/ubuntu/.rakubrew/bin/rakubrew init Bash)"`;
+`echo 'eval "$(/home/ubuntu/.rakubrew/bin/rakubrew init Bash)"' >> ~/.bashrc`;
+`export PATH=/home/ubuntu/.rakubrew/bin/:$PATH`;
+`rakubrew mode shim`;
+`rakubrew download`;
 
 `sudo apt-get install docker -y`;
 `sudo apt-get install docker-compose -y`;
