@@ -75,7 +75,10 @@ instance:
 ```
 #!/usr/bin/perl
 `sudo apt-get update -y`;
+`sudo apt-get upgrade -y`;
+`sudo apt-get install tree -y`;
 
+#`sudo apt-get install rakudo -y`;
 `curl https://rakubrew.org/install-on-perl.sh | sh`;
 `eval "$(/home/ubuntu/.rakubrew/bin/rakubrew init Bash)"`;
 `echo 'eval "$(/home/ubuntu/.rakubrew/bin/rakubrew init Bash)"' >> ~/.bashrc`;
@@ -83,8 +86,12 @@ instance:
 `rakubrew mode shim`;
 `rakubrew download`;
 
-`sudo apt-get install docker -y`;
 `sudo apt-get install docker-compose -y`;
+
+`sudo apt-get install libssl-dev -y`;
+`sudo apt-get install build-essential -y`;
+`sudo apt-get install libmime-base64-urlsafe-perl`;
+`zef install MIME::Base64 YAMLish JSON::Fast --/test --verbose`;
 ```
 
 ## NOTES
