@@ -1,4 +1,4 @@
-unit module CLI::AWS::EC2-Simple:ver<0.0.10>:auth<Steve Roe (librasteve@furnival.net)>;
+unit module CLI::AWS::EC2-Simple:ver<0.0.11>:auth<Steve Roe (librasteve@furnival.net)>;
 
 use YAMLish;
 use JSON::Fast;

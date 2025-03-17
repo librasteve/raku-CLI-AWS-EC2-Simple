@@ -1,7 +1,7 @@
 {
     "name": "CLI::AWS::EC2-Simple",
     "description": "Simple AWS EC2 CLI command",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "authors": [
         "librasteve"
     ],
