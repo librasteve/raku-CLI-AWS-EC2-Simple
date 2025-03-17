@@ -43,7 +43,14 @@ my $text2 = q:to/END2/;
 `sudo apt-get upgrade -y`;
 `sudo apt-get install tree -y`;
 
-`sudo apt-get install rakudo -y`;
+#`sudo apt-get install rakudo -y`;
+`curl https://rakubrew.org/install-on-perl.sh | sh`;
+`eval "$(/home/ubuntu/.rakubrew/bin/rakubrew init Bash)"`;
+`echo 'eval "$(/home/ubuntu/.rakubrew/bin/rakubrew init Bash)"' >> ~/.bashrc`;
+`export PATH=/home/ubuntu/.rakubrew/bin/:$PATH`;
+`rakubrew mode shim`;
+`rakubrew download`;
+
 `sudo apt-get install docker-compose -y`;
 
 `sudo apt-get install libssl-dev -y`;
