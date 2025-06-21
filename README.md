@@ -40,7 +40,7 @@ Edit this yaml file to meet your needs...
 ```
 instance:
     image: ami-044415bb13eee2391            # <== the standard, clean AWS Ubuntu
-    #image: ami-0c1163e529aeb9b20            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
+    #image: ami-0e3457f66f5acc7a0            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
     #type: t2.micro                          # <== the basic, free tier eligible machine (12 credits/hr)
     type: t3.medium                         # <== a step above t2.micro for more beefy server needs
     #type: c6a.4xlarge                       # <== a mega machine for benchmarking
