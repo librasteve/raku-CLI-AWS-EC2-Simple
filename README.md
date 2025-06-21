@@ -31,15 +31,16 @@ Will make an (e.g.) ```MyKeyPair1672164025.pem``` from your credentials in your 
 
 ## Config
 
-```launch``` reads ```aws-ec2-launch.yaml``` which is preloaded with the standard AWS Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01.
+```launch``` reads ```aws-ec2-launch.yaml``` which is preloaded with the standard AWS Canonical, Ubuntu, 24.04 LTS, amd64 jammy image build on 2022-12-01.
 Edit this yaml file to meet your needs...
+... since AMI are specific to region/account you will need to do "manual" setup once and then save your own "already applied" AMI
 
 - cat .raws-config/aws-ec2-launch.yaml 
 
 ```
 instance:
-    #image: ami-0f540e9f488cfa27d            # <== the standard, clean AWS Ubuntu
-    image: ami-0c1163e529aeb9b20            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
+    image: ami-044415bb13eee2391            # <== the standard, clean AWS Ubuntu
+    #image: ami-0c1163e529aeb9b20            # <== AWS Ubuntu plus raws-ec2 setup already applied (use --nsu flag)
     #type: t2.micro                          # <== the basic, free tier eligible machine (12 credits/hr)
     type: t3.medium                         # <== a step above t2.micro for more beefy server needs
     #type: c6a.4xlarge                       # <== a mega machine for benchmarking
