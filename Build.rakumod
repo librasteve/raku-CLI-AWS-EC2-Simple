@@ -8,8 +8,8 @@ class Build {
 my $text1 = q:to/END1/;
 instance:
     nametag: amitest
-    #image: ami-0e8d228ad90af673b            # <== the standard, clean AWS Ubuntu 24.04LTS
-    image: ami-04bc7403c36ed1222            # <== AWS Ubuntu 24.04LTS plus raws-ec2 setup already applied (use --nsu flag)
+    image: ami-044415bb13eee2391             # <== the standard, clean AWS Ubuntu 24.04LTS
+    #image: ami-04bc7403c36ed1222            # <== AWS Ubuntu 24.04LTS plus raws-ec2 setup already applied (use --nsu flag)
     type: t2.micro                          # <== the basic, free tier eligible machine (12 credits/hr)
     #type: t3.small                          # <== $0.0209/hr viable static WP
     #type: t3.medium                         # <== a step above t2.micro for more beefy server needs
