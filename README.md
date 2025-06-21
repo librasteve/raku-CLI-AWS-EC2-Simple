@@ -75,9 +75,9 @@ instance:
 
 ```
 #!/usr/bin/perl
-`sudo apt update -y`;
-`sudo apt upgrade -y`;
-`sudo apt install tree -y`;
+`sudo apt-get update -y`;
+`sudo apt-get upgrade -y`;
+`sudo apt-get install tree -y`;
 
 #`sudo apt install rakudo -y`;
 `curl https://rakubrew.org/install-on-perl.sh | sh`;
@@ -87,11 +87,11 @@ instance:
 `rakubrew mode shim`;
 `rakubrew download`;
 
-`sudo apt install docker-compose -y`;
+`sudo apt-get install docker-compose -y`;
 
-`sudo apt install libssl-dev -y`;
-`sudo apt install build-essential -y`;
-`sudo apt install libmime-base64-urlsafe-perl`;
+`sudo apt-get install libssl-dev -y`;
+`sudo apt-get install build-essential -y`;
+`sudo apt-get install libmime-base64-urlsafe-perl`;
 `zef install MIME::Base64 YAMLish JSON::Fast --/test --verbose`;
 ```
 
